@@ -1,0 +1,36 @@
+index.html
+<html>
+	<head>
+		<link rel="icon" type="image/x-icon" id="favicon" href="">
+		<meta charset="UTF-8">
+		<title>RTMCurveTool</title>
+		<style>
+			#text-pointer{
+				position: absolute;
+				top: 0;
+				right: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500"></canvas>
+		<button id="forceCircle1">円変形1-2</button>
+		<button id="forceCircle2">円変形3-4</button>
+		<button id="deleteButton">削除</button>
+		<div id="text1"></div>
+		<div id="text2"></div>
+		<div id="text3"></div>
+		<div id="text4">
+			<span>こちらをご活用ください</span>
+			<a href="https://www.desmos.com/calculator/tnapwjcthp" target="_blank">方眼上正円作成</a>
+			<a href="https://www.youtube.com/watch?v=gYvJcZhTvm0" target="_blank">操作マニュアル①</a>
+			<a href="https://www.youtube.com/watch?v=oho-DONK4yc" target="_blank">操作マニュアル②</a>
+		</div>
+		<div id="text-pointer"></div>
+		<div id="text-mouse"></div>
+		<input type="text" id="offsetX" name="offsetX">
+		<input type="text" id="offsetY" name="offsetZ">
+		<input type="text" id="copy" name="copy">
+		<script src="script_rct.js"></script>
+	</body>
+</html>
