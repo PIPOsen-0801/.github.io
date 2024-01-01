@@ -1,0 +1,63 @@
+index.html
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon" type="image/x-icon" id="favicon" href="">
+	<title>RTMUnicodeTool</title>
+	<style>
+		textarea {
+			width: 800px;
+			height: 200px;
+		}
+	</style>
+	<script>
+		window.addEventListener("load", function() {
+			var icons = ["icons/icon1.ico","icons/icon2.ico","icons/icon3.ico","icons/icon4.ico"];
+			document.getElementById("favicon").href = icons[Math.floor(Math.random() * icons.length)];
+		});
+		window.addEventListener("DOMContentLoaded", function() {
+			const defaultInput = `["","回送","試運転","普通","✈急行"],
+["null","品川","泉岳寺"]`;
+			document.getElementById("input").value = defaultInput;
+			encode();
+		});
+		function encode() {
+			const inputTextArea = document.getElementById("input");
+			const outputTextArea = document.getElementById("output");
+			const inputText = inputTextArea.value;
+			const lines = inputText.split("\n");
+			const encodedLines = lines.map(line => {
+				const encodedLine = line.replace(/([^[\]]+)/g, function(match, p1) {
+					const encodedParts = p1.split(",").map(part => {
+					const trimmedPart = part.trim();
+					if (trimmedPart.startsWith('"') && trimmedPart.endsWith('"')) {
+						const unicodeEscaped = Array.from(trimmedPart.substring(1, trimmedPart.length - 1)).map(char => {
+							if (char.charCodeAt(0) <= 127) {
+								return char;
+							}
+							return "\\u" + char.charCodeAt(0).toString(16).padStart(4, "0");
+						}).join("");
+						return '"' + unicodeEscaped + '"';
+					}
+					return trimmedPart;
+				});
+				return encodedParts.join(",");
+			});
+			return encodedLine.replace(/\n/g, "\\n");
+		});
+	const encodedText = encodedLines.join("\n");
+	outputTextArea.value = encodedText;
+}
+</script>
+</head>
+<body>
+	<h1>RTMUnicodeTool</h1>
+	<label for="input">INPUT:</label>
+	<br>
+	<textarea id="input" oninput="encode()" cols="40" rows="10"></textarea>
+	<br>
+	<label for="output">OUTPUT:</label>
+	<br>
+	<textarea id="output" readonly cols="40" rows="10"></textarea>
+</body>
+</html>
