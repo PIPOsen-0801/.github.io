@@ -1,4 +1,3 @@
-script.js
 const opacitySlider = document.getElementById("opacitySlider");
 const opacityValue = document.getElementById("opacityValue");
 
