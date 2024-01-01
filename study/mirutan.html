@@ -1,0 +1,432 @@
+index.html
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>単語帳</title>
+	<style>
+		#actionButton {
+			font-size: 37.5px;
+			padding: 20px 41.25px;
+			white-space: pre-wrap;
+		}
+		#question {
+			font-size: 50px;
+			font-weight: bold;
+			white-space: pre-wrap;
+		}
+
+		#answer {
+			font-size: 37.5px;
+			white-space: pre-wrap;
+		}
+
+		#memo {
+			font-size: 50px;
+			margin-top: 32.5px;
+			white-space: pre-wrap;
+		}
+	</style>
+	<script type="text/javascript">
+		var vocabulary = {
+			"1-100": [
+			{word:"おどろく", meaning:"はっと気づく、ふと目を覚ます", memo:"はっとする"},
+{word:"ののしる", meaning:"大騒ぎする、大声で騒ぐ、評判になる、噂になる", memo:"大きな声で騒ぐ"},
+{word:"ねんず", meaning:"心のなかで祈る、我慢する", memo:"じっと我慢する"},
+{word:"おぼゆ", meaning:"自然に思われる、似る、似ている、思い出す、人から思われる", memo:"思ふ＋ゆ自発"},
+{word:"しのぶ", meaning:"我慢する、恋心包み隠す", memo:"気付かれないようにする"},
+{word:"ながむ", meaning:"物思いに沈む、沈んで、ぼんやり見る", memo:"物思い"},
+{word:"みゆ", meaning:"自然と見える、思われる。姿を見せる、現れる。人から見られる、見せる、結婚する", memo:"見る＋ゆ自発、受身"},
+{word:"あふ", meaning:"結婚する、男女が契る", memo:"男女が結ばれる"},
+{word:"ゐる", meaning:"座る、座っている。～ている", memo:"座る"},
+{word:"ありく", meaning:"動き回る、出歩く、外出する。空間的に～して回る、時間的に～し続ける", memo:"あちこち移動する"},
+{word:"あく", meaning:"満足する。満ち足りない、嫌にならない", memo:"満足"},
+{word:"うつくし", meaning:"かわいらしい。立派だ", memo:"かわいい"},
+{word:"かなし", meaning:"いとしい、かわいい", memo:"切ない"},
+{word:"いみじ", meaning:"とてもたいそう。とてもすばらしい、とてもうれしい。とてもかなしい、ひどい、大変だ", memo:"並外れてすごい"},
+{word:"をかし", meaning:"趣がある、おもしろい。うつくしい、かわいい。滑稽だ", memo:"素敵"},
+{word:"よし", meaning:"良い、優れている。身分が高く、教養がある", memo:"よし→よろし→わろし→あし"},
+{word:"あやし", meaning:"不思議だ、変だ。けしからん、よくない。身分が低い、賤しい。粗末だ、みすぼらしい", memo:"理解を超えた不思議さ"},
+{word:"おとなし", meaning:"おとならしい、おとなびている、年配だ、年長で主だっている。年配で思慮分別がある", memo:"幼稚でない大人らしさ"},
+{word:"ゆかし", meaning:"見たい、知りたい、聞きたい", memo:"行ってみたいと心惹かれる"},
+{word:"おぼつかなし", meaning:"ぼんやりしている、はっきりしない。気がかりだ、不安だ。待ち遠しい、もどかしい。", memo:"気になる"},
+{word:"ありがたし", meaning:"めったにない。めったにないほど立派だ、優れている", memo:"あり＋難し"},
+{word:"めでたし", meaning:"すばらしい、立派だ", memo:"おもいっきり褒めたい"},
+{word:"くちをし", meaning:"残念だ、期待はずれだ", memo:"がっかり"},
+{word:"うし", meaning:"辛い、嫌だ", memo:"憂鬱な気分"},
+{word:"わびし", meaning:"辛い、やりきれない。興ざめだ、物足りない", memo:"やりきれない"},
+{word:"あはれなり", meaning:"心底しみじみと感じられる", memo:"じーんとした感動"},
+{word:"おろかなり", meaning:"おろそかだ、いい加減だ。～という言葉では言い尽くせない", memo:"いい加減"},
+{word:"ねんごろなり", meaning:"熱心だ、丁寧だ。親しい、親密だ", memo:"心をこめた熱心さ"},
+{word:"つれづれなり", meaning:"することもなく退屈だ、所在ない、手持ち無沙汰だ。独りの物思いに沈みしんみりともの寂しい", memo:"単調で退屈だ"},
+{word:"いたづらなり", meaning:"無駄だ、役に立たない。手持ち無沙汰で暇だ", memo:"むなしい"},
+{word:"としごろ", meaning:"長年、数年の間", memo:"年の流れ"},
+{word:"かたち", meaning:"容貌、人の姿", memo:"人の顔のかたち"},
+{word:"かげ", meaning:"光。姿、形", memo:"光輝く物"},
+{word:"ほい", meaning:"かねてからの願い、本来の目的、宿願", memo:"「ほ」んらいの「い」し"},
+{word:"ものがたり", meaning:"話、雑談、世間話。物語", memo:"おしゃべり"},
+{word:"ふみ", meaning:"手紙。漢詩、漢籍、学問", memo:"手紙"},
+{word:"ほど", meaning:"時、自分、間。辺り、距離、道のり、長さ、広さ。身分、身の程、分際、年齢、間柄。様子、程度、程", memo:"いろいろな程"},
+{word:"なさけ", meaning:"思いやり、人情。男女間の恋情。情趣を解する心、風流心", memo:"すてきな心"},
+{word:"ちぎり", meaning:"約束。前世からの因縁、宿縁。男女の仲、逢瀬", memo:"約束"},
+{word:"けしき", meaning:"様子、素振り。機嫌、思い、意向", memo:"目に見えるものの様子"},
+{word:"いと", meaning:"とても、たいそう。たいして～ない、それほど～ない", memo:"とても～"},
+{word:"あまた", meaning:"たくさん、数多く", memo:"余るほど沢山"},
+{word:"げに", meaning:"なるほど、本当に", memo:"納得した気持ち"},
+{word:"なほ", meaning:"やはり", memo:"やっぱり"},
+{word:"やがて", meaning:"そのまま、すぐに", memo:"即"},
+{word:"やうやう", meaning:"だんだん、次第に", memo:"少しずつ変化する様子"},
+{word:"え～打消", meaning:"～できない", memo:"不可能"},
+{word:"な～そ", meaning:"～するな、～してくれるな", memo:"禁止"},
+{word:"さらに～打消", meaning:"まったく～ない、決して～ない", memo:"全部否定"},
+{word:"いかで、いかでか", meaning:"どうして～か。どうして～か、いや～ない。どうにかして～たい、～てほしい、～よう", memo:"疑問、反語と願望"},
+{word:"にほふ", meaning:"うつくしく照り映える、うつくしく輝く", memo:"視覚的に美しい"},
+{word:"うつろふ", meaning:"色が変わる、色が変わり紅葉する、葉や花が散る。心が移る、心変わりする", memo:"色の変化、心の変化"},
+{word:"いぬ", meaning:"行く、去る。時が過ぎる", memo:"行ってしまう"},
+{word:"あそぶ", meaning:"管弦を楽しむ", memo:"音楽を楽しむ"},
+{word:"めづ", meaning:"感嘆する、褒める、称える。愛する、可愛がる、好む", memo:"愛づ"},
+{word:"ならふ", meaning:"慣れる、習慣となる。親しむ、馴染む。", memo:"慣れる"},
+{word:"かしづく", meaning:"大切に教育する、大切に世話をする", memo:"大事に世話をする"},
+{word:"たのむ[四段]", meaning:"あてにする、期待する。", memo:"あてにする"},
+{word:"たのむ[下二段]", meaning:"あてにさせる、期待させる", memo:"あてにさせる"},
+{word:"まもる", meaning:"見つめる、見守る", memo:"目守る"},
+{word:"きこゆ", meaning:"きこえる、自然に耳に入る。世間に知られる、噂される、評判になる。理解できる、意味がわかる", memo:"聞く＋ゆ自発"},
+{word:"おこす", meaning:"よこす、送ってくる", memo:"こちらへよこす"},
+{word:"まうく", meaning:"準備する、用意する", memo:"あらかじめ設ける"},
+{word:"いらふ", meaning:"答える、返事をする", memo:"答える"},
+{word:"わたる", meaning:"行く、来る、通る、移動する。時間的にずっと～する、空間的に一面に～する", memo:"移動する"},
+{word:"わたらせたもう", meaning:"いらっしゃる", memo:"移動する"},
+{word:"ぐす", meaning:"引き連れる、付き従える。付き従う、連れ立つ。添える、備える、備わる", memo:"一緒に"},
+{word:"とぶらふ", meaning:"訪れる、尋ねる。見舞う、安否を尋ねる。弔問する、供養する", memo:"訪問、弔問"},
+{word:"ものす", meaning:"いる、ある。行く、来る。何かをする。", memo:"あり、行く、来の代わり"},
+{word:"～ものしたまう", meaning:"～へいらっしゃる", memo:"あり、行く、来の代わり"},
+{word:"わななく", meaning:"震える", memo:"ぶるぶる、わなわな"},
+{word:"わずらふ", meaning:"思い悩む、病気になる。苦労する、難儀する。～するのに困る、～し兼ねる", memo:"心身の苦痛"},
+{word:"まどふ", meaning:"心が乱れる、途方に暮れる、慌てる。ひどく～する", memo:"パニック"},
+{word:"かづく[四段]", meaning:"ほうびをいただく、かぶる", memo:"ほうびをもらう"},
+{word:"かづく[下二]", meaning:"ほうびを与える、かぶせる", memo:"ほうびをあたえる"},
+{word:"うす", meaning:"消える、なくなる。亡くなる、死ぬ", memo:"死ぬ"},
+{word:"おこなふ", meaning:"仏道の修業をする、勤行する", memo:"仏道の修業"},
+{word:"おもしろし", meaning:"景色などが素晴らしい、趣がある。興趣がある、興味深い", memo:"明るい、晴れやか"},
+{word:"あらまほし", meaning:"理想的だ、好ましい", memo:"理想的"},
+{word:"やむごとなし", meaning:"高貴だ、尊い、大切だ。この上ない、並々でない", memo:"最高だ"},
+{word:"ゆゆし", meaning:"不吉だ、恐ろしい。すばらしい、立派だ。甚だしい、重大だ、大変だ", memo:"普通とかけ離れている"},
+{word:"かしこし", meaning:"恐れ多い、もったいない。素晴らしい、立派だ、好都合だ。非常に", memo:"恐れ多いほどすごい"},
+{word:"うるはし", meaning:"端正だ、きちんとしている、立派だ。親しい", memo:"端正な美"},
+{word:"はかなし", meaning:"頼りない、あっけない、むなしい。ちょっとした、取るに足らない", memo:"ちょっとで頼りない"},
+{word:"はかばかし", meaning:"しっかりしている、たのもしい。はっきりしている、際立っている", memo:"しっかり、ちゃんと"},
+{word:"やさし", meaning:"優美だ、上品だ、風流だ。健気だ、殊勝だ、感心だ", memo:"優雅、健気"},
+{word:"いはけなし", meaning:"幼い、あどけない", memo:"幼い"},
+{word:"かたはらいたし", meaning:"見苦しい、苦々しい。気の毒だ、心苦しい。恥ずかしい、決まりが悪い", memo:"いたたまれない"},
+{word:"こころもとなし", meaning:"待ち遠しい、じれったい。不安だ、心配だ。はっきりしない、ぼんやりしている", memo:"気持ちばかりが先走る"},
+{word:"いとほし", meaning:"かわいそうだ、気の毒だ。かわいい、いとしい", memo:"気の毒"},
+{word:"あさまし", meaning:"驚き呆れるほどだ、呆れるほど酷い。情けない、嘆かわしい", memo:"唖然"},
+{word:"いたし", meaning:"たいそう、とても。それほど～ない。すばらしい", memo:"いたほど激しい"},
+{word:"つれなし", meaning:"平然としている、素知らぬふりをしている。冷淡だ、薄情だ。何の変化もない、元のままだ", memo:"平然、冷淡"},
+{word:"あいなし", meaning:"筋違いだ、具合が悪い。つまらない、おもしろくない。無闇にわけもなく", memo:"違和感がある"},
+{word:"あぢきなし", meaning:"どうにもならない、無益だ。つまらない、苦々しい", memo:"どうにもならないつまらなさ"},
+{word:"さがなし", meaning:"性質よくない、意地が悪い。いたづらだ", memo:"よい性ない"},
+{word:"すさまじ", meaning:"興冷めだ。殺風景だ、荒涼としている", memo:"不調和でしらける"},
+{word:"いふかひなし", meaning:"どうしようもない、行っても仕方がない。取るに足らない、たわいない。酷い、不甲斐ない", memo:"話にならない"},
+{word:"よしなし", meaning:"関係がない、言われがない、理由がない。方法がない、仕方がない。つまらない、甲斐がない", memo:"よしがない"},
+{word:"びんなし", meaning:"都合が悪い、不都合だ。困ったことだ、感心しない", memo:"まずい"},
+{word:"さうざうし", meaning:"物足りない、心寂しい", memo:"物足りなくて心寂しい"},
+{word:"むつかし", meaning:"うっとうしい、不快だ。わずらわしい、面倒だ。むさくるしい、見苦しい", memo:"不快だ"},
+{word:"あてなり", meaning:"身分が高い、高貴だ。上品だ、優美だ", memo:"高貴で上品"},
+{word:"きよらなり", meaning:"うつくしい、華麗だ", memo:"最高美"},
+			],
+			"101-200": [
+		{word:"さらなり", meaning:"今更言うまでもない、もちろんだ。", memo:"言うと今更だ"},
+{word:"あらはなり", meaning:"まるみえだ。明らかだ", memo:"丸見え"},
+{word:"あからさまなり", meaning:"ちょっとの間だ", memo:"ほんのちょっとの間"},
+{word:"かたくななり", meaning:"情趣を解さない、教養がない。見苦しい、みっともない", memo:"頑固＝無教養＝見苦しい"},
+{word:"あだなり", meaning:"はかない、むなしい。不誠実だ、浮気だ", memo:"表面ばかりで実がない"},
+{word:"すずろなり", meaning:"あてもない、わけもない。思いがけない、無関係だ、つまらない。むやみだ", memo:"漫然としている"},
+{word:"むげなり", meaning:"まったくひどい、最低だ。無闇に。まったく～ない", memo:"最低"},
+{word:"おほやけ", meaning:"朝廷。天皇", memo:"朝廷＝天皇"},
+{word:"きは", meaning:"身分、分際。程度", memo:"身分"},
+{word:"しるし", meaning:"神仏のご利益、霊言。効果、効き目。前兆、兆候", memo:"神仏のご利益"},
+{word:"ことわり", meaning:"道理。", memo:"物のの筋道"},
+{word:"ためし", meaning:"例、先例、手本。語り草、話の種", memo:"ためしは例"},
+{word:"わざ", meaning:"仏事、法事。こと、行い", memo:"行為"},
+{word:"おぼえ", meaning:"評判、人望。寵愛を受けること", memo:"人からよく思われること"},
+{word:"ここち", meaning:"気持ち、感じ。病気、体調", memo:"気分"},
+{word:"うつつ", meaning:"現実、正気", memo:"夢か現か"},
+{word:"つとめて", meaning:"早朝。翌朝", memo:"朝"},
+{word:"つごもり", meaning:"月末、月の下旬", memo:"月末"},
+{word:"ついで", meaning:"物事の順序、順番。機会、折", memo:"時の順序"},
+{word:"たより", meaning:"頼れるもの、よりどころ。縁故、つて。便宜、手段。機会、ついで", memo:"頼りになるもの"},
+{word:"こころざし", meaning:"愛情、誠意。贈り物、謝礼", memo:"愛は贈り物"},
+{word:"よし", meaning:"縁、由緒、訳。方法、手段。風情、趣。事情、旨、こと。素振り、様子", memo:"拠り所となるもの"},
+{word:"よろづ", meaning:"様々なこと、あらゆること。全て、万事につけて", memo:"万"},
+{word:"て", meaning:"筆跡、書、文字。演奏法、曲", memo:"筆跡"},
+{word:"ざえ", meaning:"学問、学識、才能", memo:"漢字の教養"},
+{word:"おのづから", meaning:"自然に、一人でに。偶然に、たまたま。万一、ひょっとすると", memo:"自然、偶然、万が一"},
+{word:"すなわち", meaning:"すぐに、そのまま", memo:"即"},
+{word:"とく", meaning:"早く、すぐに。既に、とっくに", memo:"疾風のように"},
+{word:"いつしか", meaning:"早く、～したい、～してほしい。早くも", memo:"一刻も早く"},
+{word:"なべて", meaning:"総じて、押しなべて。普通、並", memo:"一般"},
+{word:"いとど", meaning:"いっそう、ますます", memo:"程度の進行"},
+{word:"かく", meaning:"このように", memo:"かくかくしかじか"},
+{word:"とかく", meaning:"あれこれ、なんやかやと", memo:"と＋かく"},
+{word:"しか", meaning:"そう、そうのように", memo:"かくかくしかじか"},
+{word:"さ", meaning:"そう、そのように", memo:"そのように"},
+{word:"さばかり", meaning:"その程度、それほど。非常に、たいそう", memo:"どの程度"},
+{word:"さながら", meaning:"そのまま、もとのまま。全部、すべて", memo:"そのまま全部"},
+{word:"つゆ打消", meaning:"少しも～ない、全く～ない", memo:"全部否定"},
+{word:"よも～じ", meaning:"まさか～ないだろう、よもや～ない", memo:"まさか～まい"},
+{word:"なかなか", meaning:"かえって、むしろ", memo:"かえってしないほうが"},
+{word:"さすがに", meaning:"そうはいってもやはり", memo:"そうはいっても"},
+{word:"かつ", meaning:"一方では。すぐに次から次へと", memo:"２つのことの並行、連鎖"},
+{word:"など、などか", meaning:"どうして～か、どうして～か、いや～ではない", memo:"なぜ"},
+{word:"なでふ、なんでふ", meaning:"どうして～か、どうして～か、いや～ではない", memo:"なぜ"},
+{word:"ありし、ありつる", meaning:"かつての、以前の。さっきの、先程の", memo:"遠い過去、近い過去"},
+{word:"れいの", meaning:"いつものように。いつもの", memo:"例によって"},
+{word:"おとにきく", meaning:"うわさに聞く、人づてに聞く。評判が高い、有名だ", memo:"音は噂や評判"},
+{word:"いかがせむ", meaning:"どうしようか。どうしようもない", memo:"どうしようか、どうしようもない"},
+{word:"さるべき", meaning:"そうするのが適当な、ふさわしい。そうなるはずの、そうなる運命の。立派な、それ相応の", memo:"それが適当か当然だ"},
+{word:"いざたまへ", meaning:"さあ一緒にいらっしゃい、さあどうぞ", memo:"さあどうぞ"},
+{word:"しる", meaning:"土地を領有する、国を治める", memo:"領がある"},
+{word:"あくがる", meaning:"さまよいでる。魂が宙に彷徨う。心が上の空になる", memo:"ふらふらさまよう"},
+{word:"やすらふ", meaning:"立ち止まる、とどまる。ためらう。躊躇する", memo:"ぐずぐずする"},
+{word:"うちいづ", meaning:"口に出して言う", memo:"声や言葉を口に出す"},
+{word:"やつす", meaning:"地味な格好にする、目立たない様子をする", memo:"地味で目立たない"},
+{word:"おとなふ", meaning:"音を立てる、声を立てる。手紙を出す、訪れる", memo:"おと＝音"},
+{word:"そばむ", meaning:"横を向く", memo:"横顔"},
+{word:"かたらふ", meaning:"交際する、親しくする", memo:"親密に言葉をかわす"},
+{word:"すむ", meaning:"男が女のもとに通う", memo:"夫が妻のもとに通う"},
+{word:"さはる", meaning:"妨げられる、差し支える", memo:"邪魔"},
+{word:"あるじす", meaning:"客にごちそうする、客をもてなす", memo:"おもてなし"},
+{word:"もてなす", meaning:"振る舞う。取り扱う、取り計らう。もてはやす、大切に扱う", memo:"我が身は振る舞い、他は扱う"},
+{word:"きょうず", meaning:"面白がる", memo:"興に乗る"},
+{word:"およすぐ", meaning:"成長する、大人になる。大人びる、ませる", memo:"およ＝老"},
+{word:"ときめく", meaning:"寵愛を受ける、時流に乗って栄える", memo:"今をときめく"},
+{word:"さる", meaning:"避ける、逃れる。断る、辞退する", memo:"さる＝去る、避る"},
+{word:"こうず", meaning:"疲れる、披露する", memo:"疲労困憊"},
+{word:"かきくらす", meaning:"悲しみが心を暗くする、涙が目の前を暗くする", memo:"真っ暗"},
+{word:"うれふ", meaning:"訴える、悲しみ嘆く", memo:"訴える"},
+{word:"かこつ", meaning:"不平を言う、文句をいう", memo:"ぶつぶつ文句をいう"},
+{word:"いたはる", meaning:"病気になる、披露する。骨を折る、苦労する。世話をする", memo:"ぐったりする"},
+{word:"ためらふ", meaning:"静養する、病勢を抑える。気を静める、感情を抑える", memo:"ぐっと抑える"},
+{word:"おこたる", meaning:"病気が良くなる、病気が快方に向かう", memo:"病気回復"},
+{word:"なやむ", meaning:"病気で苦しむ、気分が優れなくなる", memo:"病気になる"},
+{word:"おくる", meaning:"先立たれる、先に死なれる", memo:"死に遅れる"},
+{word:"したたむ", meaning:"処理する、整理する。用意する、準備する。取り締まる、治める", memo:"ちゃんと、きちんと"},
+{word:"あたらし", meaning:"もったいない、惜しい", memo:"惜しむべし"},
+{word:"かたじけなし", meaning:"恐れ多い、もったいない。ありがたい", memo:"もったいない"},
+{word:"をこがまし", meaning:"愚かしい、みっともない", memo:"バカっぽい"},
+{word:"こころにくし", meaning:"奥ゆかしい", memo:"奥が深い"},
+{word:"さかし", meaning:"かしこい、賢明だ。気がいいている、才気がある。気がしっかりしている。気丈だ。こざかしい", memo:"判断力がある"},
+{word:"すきずきし", meaning:"好色めいている、色好みだ。風流だ、物好きだ", memo:"好色、風流"},
+{word:"なまめかし", meaning:"優美だ、みずみずしい", memo:"エレガント"},
+{word:"いまめかし", meaning:"現代風だ、当世風だ。華やかだ、目新しい", memo:"今風な感じ"},
+{word:"しどけなし", meaning:"無造作だ、気楽な感じだ。乱れている、だらしがない", memo:"ラフな感じ"},
+{word:"つきづきし", meaning:"似つかわしい、ふさわしい", memo:"つきはfit"},
+{word:"なつかし", meaning:"好ましい、感じが良い", memo:"好感"},
+{word:"めやすし", meaning:"見苦しくない、感じ良い", memo:"見て感じが良い"},
+{word:"こころやすし", meaning:"安心だ。気楽だ、気安い", memo:"心が波立っていない"},
+{word:"うしろめたし", meaning:"心配だ、気がかりだ", memo:"気がかり"},
+{word:"こころぐるし", meaning:"つらい、心配だ。気の毒だ、見ていて辛い", memo:"こころがいたい"},
+{word:"まばゆし", meaning:"見ていられない、目を背けたいほどだ。恥ずかしい、照れくさい", memo:"目を伏せたい"},
+{word:"はずかし", meaning:"こちらが気後れするほど立派だ、優れている", memo:"相手が立派過ぎる"},
+{word:"つたなし", meaning:"下手だ、拙劣だ。劣っている、凡庸だ。下品だ、見苦しい。不運だ、運が悪い", memo:"劣っている"},
+{word:"こちたし", meaning:"仰々しい、甚だしい", memo:"おおげさ"},
+{word:"さうなし", meaning:"ためらわない、無造作だ", memo:"ストレート"},
+{word:"ところせし", meaning:"いっぱいだ、あふれるくらいだ。窮屈だ、不自由だ。大げさだ、仰々しい", memo:"窮屈"},
+{word:"つつまし", meaning:"気が引ける、気恥ずかしい", memo:"引っ込み思案"},
+{word:"まさなし", meaning:"良くない、不都合だ。見苦しい、みっともない", memo:"外れている"},
+{word:"めたし", meaning:"癪に障る、憎らしい", memo:"癪"},
+			],
+			"201-300": [
+			{word:"まだし", meaning:"まだ時期が早い、時期尚早だ。不十分だ、未熟だ", memo:"まだまだ"},
+{word:"はしたなし", meaning:"不釣り合いだ。無愛想だ。激しい、強い。決まりが悪い、体裁が悪い", memo:"不調和"},
+{word:"わりなし", meaning:"道理に合わない、無理だ。並々でない、甚だしい。耐え難い、辛い。仕方がない、やむを得ない", memo:"むちゃくちゃ"},
+{word:"ずちなし", meaning:"どうしようもない、仕方がない", memo:"お手上げ"},
+{word:"あへなし", meaning:"あっけない、張り合いがない", memo:"拍子抜け"},
+{word:"くまなし", meaning:"暗いところがない、影の部分がない。行き届かないところがない、至らないところがない", memo:"全面照射"},
+{word:"めざまし", meaning:"気に食わない、不愉快だ", memo:"目が釣り上がる"},
+{word:"こころづきなし", meaning:"気に入らない、気に食わない", memo:"こころにfitしない"},
+{word:"ゆくりなし", meaning:"突然だ、思いがない", memo:"いきなり"},
+{word:"あつし", meaning:"病状が重い、病弱である", memo:"重い病状"},
+{word:"あながちなり", meaning:"無理やりだ、強引だ。無闇だ、甚だしい", memo:"強引"},
+{word:"なめげなり", meaning:"無礼だ、無作法だ", memo:"なめている感じ"},
+{word:"なのめなり", meaning:"並一通りだ、ありきたりだ。いい加減だ、おろそかだ。", memo:"適当"},
+{word:"おぼろけなり", meaning:"並一通りだ、ありきたりだ。並々でない、格別だ", memo:"並なのか並じゃないのか？"},
+{word:"あやにくなり", meaning:"思いに反して酷い、思いに反して甚だしい", memo:"ああ憎い"},
+{word:"まめやかなり", meaning:"真面目だ、本気だ。実生活向きだ、実用的だ。本格的だ、本式だ", memo:"中身がある"},
+{word:"せちなり", meaning:"切実だ、身にしみる。大切だ、切迫している。ひたすら、一途に", memo:"せち＝切"},
+{word:"よそなり", meaning:"無縁だ、無関係だ", memo:"よそ＝outside"},
+{word:"うちつけなり", meaning:"突然だ、だしぬけだ。軽率だ、無礼だ", memo:"ぶっつけ本番"},
+{word:"とみなり", meaning:"急だ。すぐに", memo:"急"},
+{word:"みそかなり", meaning:"密かだ", memo:"みそか＝密か"},
+{word:"こまやかなり", meaning:"こころをこめている、丁寧だ。色が濃い。繊細で美しい", memo:"細やか、濃やか"},
+{word:"らうたげなり", meaning:"かわいらしい、華麗だ", memo:"カワイイ"},
+{word:"いうなり", meaning:"優美だ、優れている", memo:"エレガント"},
+{word:"うち", meaning:"宮中、内裏。天皇、帝", memo:"うち＝内裏、内裏＝天皇"},
+{word:"うへ", meaning:"天皇、帝。奥様、奥方。御座所、貴人のいるところ", memo:"ミセスもある"},
+{word:"しな", meaning:"身分、家柄", memo:"品は家柄次第"},
+{word:"ふるさと", meaning:"古都、旧都。馴染みのある土地。実家、我が家", memo:"以前の暮らしの中心地"},
+{word:"こころばへ", meaning:"心遣い、配慮。性格、性質。趣、風情", memo:"心の動き"},
+{word:"ひま", meaning:"隙間。絶え間。すき、機会", memo:"空白"},
+{word:"ひがこと", meaning:"間違い、過ち", memo:"ひが＝間違い"},
+{word:"とが", meaning:"欠点、短所。罪、過ち", memo:"おとがめ"},
+{word:"そらごと", meaning:"嘘、偽り", memo:"空っぽな言葉"},
+{word:"せうそこ", meaning:"手紙、伝言。訪問、来意を告げること", memo:"連絡"},
+{word:"くもゐ", meaning:"宮中、都。天上、空。遠く離れたところ、はるか遠いところ", memo:"くもよ。遠いくもよ"},
+{word:"かしこまり", meaning:"お礼。お詫び。謹慎", memo:"感謝と謝罪"},
+{word:"よ　よのなか", meaning:"男女の仲、夫婦の仲", memo:"人生は男女関係"},
+{word:"かぎり", meaning:"人生の最期、最後。すべて、全部。だけ、ばかり", memo:"これっきり"},
+{word:"ここら　そこら", meaning:"たくさん", memo:"あまたと同じ"},
+{word:"かたみに", meaning:"互いに", memo:"かたみ＝片身"},
+{word:"わざと", meaning:"わざわざ。特別に、とりわけ。本格的な、本式の", memo:"「わざ」は「わざ」「わざ」"},
+{word:"うたて", meaning:"嫌なことに、不快に", memo:"嫌"},
+{word:"かねて", meaning:"前もって、前から。～前から", memo:"かねてから"},
+{word:"やをら", meaning:"そっと、静かに", memo:"そっと、すうっと"},
+{word:"よもすがら", meaning:"一晩中、夜通し", memo:"オールナイト"},
+{word:"ゆめ・ゆめゆめ～打消", meaning:"全く～ない、少しも～ない。決して～（し）てはいけない、断じて～（し）てはいけない", memo:"否定　禁止"},
+{word:"をさをさ～打消", meaning:"ほとんど～ない、めったに～ない", memo:"全部ではない"},
+{word:"あなかま", meaning:"しっ静かに、ああ、うるさい", memo:"ああやかましい"},
+{word:"かちより", meaning:"歩いて、徒歩で", memo:"かち＝徒歩"},
+{word:"けしからず", meaning:"異様だ、変だ", memo:"異しからずは異しと同じ"},
+{word:"けしからず", meaning:"異様だ、変だ", memo:"異しからずは異しと同じ"},
+{word:"おもひやる", meaning:"想像する。思いをはせる", memo:"想像"},
+{word:"おきつ", meaning:"あらかじめ決める、決めておく。指図する、命令する", memo:"掟を定める"},
+{word:"すまふ", meaning:"抵抗する、断る", memo:"NO!"},
+{word:"さす", meaning:"閉める、鍵をかける。途中で～するのをやめる", memo:"戸締り"},
+{word:"しほたる", meaning:"涙で袖が濡れる、涙を流す", memo:"涙ぽろぽろ"},
+{word:"たばかる", meaning:"工夫する、一計を案じる。だます、ごまかす", memo:"謀る"},
+{word:"まつりごつ", meaning:"政治を行う", memo:"まつりごとをする"},
+{word:"らうらうじ", meaning:"もの慣れている、才たけでいる。気品がある、洗練されている", memo:"洗練"},
+{word:"むくつけし", meaning:"不気味だ、君が悪い", memo:"ぞっとする"},
+{word:"おほけなし", meaning:"身の程知らずだ、分不相応だ", memo:"思い上がり"},
+{word:"いぶせし", meaning:"気が晴れない、気になる", memo:"すっきりしない"},
+{word:"しるし", meaning:"明白だ、明瞭だ。（～もしるく）～もそのとおりに、～もてきめんに", memo:"見てはっきりとわかる"},
+{word:"こよなし", meaning:"格段である、格段の差がある。格段に劣っている", memo:"段違い"},
+{word:"くやし", meaning:"悔やまれる、後悔される", memo:"後悔"},
+{word:"たのし", meaning:"裕福だ、豊かだ", memo:"経済的に楽々"},
+{word:"おもはずなり", meaning:"思いがけない、意外だ", memo:"意外にも一語"},
+{word:"ことなり", meaning:"別である、ほかと違う。違う～、異なる～", memo:"ことは異"},
+{word:"いろ", meaning:"情趣、風情。恋愛、異性", memo:"色を添える　色を好む"},
+{word:"こころ", meaning:"情趣を解する心、風流心", memo:"貴族的な心＝風流心"},
+{word:"ゆゑ", meaning:"理由、わけ。品格、由緒。風情、趣", memo:"根っこ"},
+{word:"あない", meaning:"内情", memo:"インフォメーション"},
+{word:"さた", meaning:"評議、評定。指図、命令。処置、始末", memo:"取り沙汰"},
+{word:"やう", meaning:"わけ、事情。手段、方法。こと、様子", memo:"わけあり"},
+{word:"あらまし", meaning:"計画、予定、願い", memo:"こんな風に有らまし"},
+{word:"いそぎ", meaning:"準備、用意", memo:"いそいそ準備"},
+{word:"つま", meaning:"先、端。きっかけ、糸口", memo:"つま先のつま"},
+{word:"はらから", meaning:"兄弟姉妹", memo:"同腹"},
+{word:"けぢめ", meaning:"区別、違い", memo:"ただの区切り"},
+{word:"そのかみ", meaning:"その時。その昔", memo:"話題の時点"},
+{word:"ただびと", meaning:"臣下。普通の貴族", memo:"天皇VS臣下　一般の貴族VS普通の貴族"},
+{word:"をりふし", meaning:"ちょうどその時、折も折。その時々、折々、季節", memo:"ふしも折"},
+{word:"はやく", meaning:"以前、昔。すでに、とっくに。（はやく～けり）なんとまあ、実は", memo:"今よりも早い時に"},
+{word:"つくづくと", meaning:"しんみりと、しみじみと", memo:"心静かに"},
+{word:"せめて", meaning:"無理やり、しいて。非常に、きわめて", memo:"ぐいぐい追って"},
+{word:"さりとも", meaning:"いくらなんでも、それにしても", memo:"いくらなんでも福詞です"},
+{word:"さて", meaning:"そのまま、そのような状態で。（さての）そのほかの、それ以外の", memo:"同じ状態のままで"},
+{word:"おほかた～打消", meaning:"まったく～ない、少しも～ない", memo:"全部否定"},
+{word:"かまへて", meaning:"注意して、気を付けて。ぜひとも。決して", memo:"十分に心を配って"},
+{word:"させる", meaning:"たいした、これといった", memo:"ドンマイ！させることはない"},
+{word:"さはれ", meaning:"どうにでもなれ、ままよ", memo:"成り行きのままよ"},
+{word:"いとしもなし", meaning:"たいしたことはない", memo:"それほど・でも・ない"},
+{word:"いかにぞや", meaning:"あまり感心しない、どんなものか", memo:"いかがなものか"},
+{word:"さればよ　さればこそ", meaning:"思った通りだ、案の定", memo:"予想的中！"},
+{word:"よのつねなり", meaning:"ありきたりだ、普通だ。月並みの表現だ", memo:"月並み"},
+{word:"ただならず", meaning:"様子が普通ではない。心が平静ではない。（ただならずなる）妊娠する、懐妊する", memo:"何かある"},
+{word:"ものもおぼえず", meaning:"呆然としている、我を失っている。道理をわきまえない", memo:"頭真っ白！"},
+{word:"ひとやりならず", meaning:"他のせいではなく、自分の心からする", memo:"自分のせい"},
+{word:"またのひ", meaning:"翌日、次の日", memo:"また＝NEXT"},
+{word:"～あへず", meaning:"最後まで～しきれない", memo:"頑張りきれない"},
+]
+		};
+
+		var selectedRange = ""; // 選択された範囲を保持
+		var remainingWords = []; // 出題する単語のリスト
+
+		function initialize() {
+			selectedRange = document.getElementById("range").value;
+			remainingWords = vocabulary[selectedRange].slice(); // 単語リストのコピーを作成
+
+			document.getElementById("question").textContent = "　";
+			document.getElementById("answer").textContent = "　";
+			document.getElementById("memo").textContent = "　";
+			document.getElementById("actionButton").textContent = "　出　題　";
+			document.getElementById("actionButton").setAttribute("onclick", "showQuestion()");
+			updateRemainingCount();
+		}
+
+		function showQuestion() {
+			if (remainingWords.length === 0) {
+				// 出題する単語が残っていない場合、リストをリセット
+				remainingWords = vocabulary[selectedRange].slice();
+			}
+
+			var randomIndex = Math.floor(Math.random() * remainingWords.length);
+			var word = remainingWords[randomIndex];
+
+			document.getElementById("question").textContent = word.word;
+			document.getElementById("answer").textContent = "　";
+			document.getElementById("memo").textContent = "　";
+
+			document.getElementById("actionButton").textContent = "　解　答　";
+			document.getElementById("actionButton").setAttribute("onclick", "showAnswerAndMemo()");
+
+			remainingWords.splice(randomIndex, 1); // 出題した単語をリストから削除
+			updateRemainingCount();
+		}
+
+		function showAnswerAndMemo() {
+			var currentWord = document.getElementById("question").textContent;
+			var meaning = "";
+			var memo = "";
+
+			// 出題した単語の意味とメモを取得
+			for (var i = 0; i < vocabulary[selectedRange].length; i++) {
+				if (vocabulary[selectedRange][i].word ===				currentWord) {
+					meaning = vocabulary[selectedRange][i].meaning;
+					memo = vocabulary[selectedRange][i].memo;
+					break;
+				}
+			}
+
+			document.getElementById("answer").textContent = meaning;
+			document.getElementById("memo").textContent = memo;
+
+			document.getElementById("actionButton").textContent = "　出　題　";
+			document.getElementById("actionButton").setAttribute("onclick", "showQuestion()");
+
+			updateRemainingCount();
+		}
+
+		function updateRemainingCount() {
+			var remainingCount = remainingWords.length;
+			var totalCount = vocabulary[selectedRange].length;
+			var countText = "残り " + remainingCount + "/" + totalCount;
+			document.getElementById("remainingCount").textContent = countText;
+		}
+	</script>
+</head>
+<body onload="initialize()">
+	<h1>みる単300</h1>
+	<label for="range">範囲:</label>
+	<select id="range" onchange="initialize()">
+		<option value="1-100">1-100</option>
+		<option value="101-200">101-200</option>
+		<option value="201-300">201-300</option>
+	</select>
+	<div id="remainingCount"></div>
+	<br>
+	<button id="actionButton" onclick="showQuestion()">出題</button>
+	<br>
+	<div>
+		<strong>問題:</strong> <span id="question"></span>
+	</div>
+	<div>
+		<strong>回答:</strong> <span id="answer"></span>
+	</div>
+	<div>
+		<strong>メモ:</strong> <span id="memo"></span>
+	</div>
+</body>
+</html>
