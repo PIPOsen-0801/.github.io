@@ -1,4 +1,3 @@
-script.js
 window.addEventListener("load", function() {
 	var icons = ["icons/icon1.ico","icons/icon2.ico","icons/icon3.ico","icons/icon4.ico"];
 	document.getElementById("favicon").href = icons[Math.floor(Math.random() * icons.length)];
