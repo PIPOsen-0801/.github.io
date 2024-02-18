@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" id="favicon" href="">
+    <title>RTMStationNameGenerator</title>
+    <style>
+        textarea {
+            width: 800px;
+            height: 200px;
+        }
+    </style>
+    <script>
+		window.addEventListener("load", function() {
+			var icons = ["icons/icon1.ico","icons/icon2.ico","icons/icon3.ico","icons/icon4.ico"];
+			document.getElementById("favicon").href = icons[Math.floor(Math.random() * icons.length)];
+		});
+
+        var combinations = []
+
+        function generateCombinations() {
+            var list1 = [["", "", "", "", "", "", "新"],
+            ["", "", "", "", "東", "西", "南", "北"],
+            ["遣水", "対屋", "渡殿", "蔀", "閼伽", "文机", "円座", "紙燭", "炭櫃", "狩衣", "直垂", "単", "萌黄", "胡簶", "破子", "折敷", "采女", "重陽", "新嘗", "入相", "朝臣", "帥", "御簾", "桟敷", "土器", "帷子", "新発意", "透垣", "廂"],
+            ["", "", "", "", "", "町", "町", "川", "川", "浜", "野"]];
+			var list2 = [["", "", "", "", "", "", "しん"],
+            ["", "", "", "", "ひがし", "にし", "みなみ", "きた"],
+            ["やりみず", "たいのや", "わたどの", "しとみ", "あか", "ふづくえ", "わろうだ", "しそく", "すびつ", "かりぎぬ", "ひたたれ", "ひとえ", "もえぎ", "やなぐい", "わりご", "おしき", "うねめ", "ちょうよう", "にいなめ", "いりあい", "あそん", "そち", "みす", "さじき", "かわらけ", "かたびら", "しぼち", "すいがい", "ひさし"],
+            ["", "", "", "", "", "まち", "ちょう", "かわ", "がわ", "はま", "の"]];
+
+            var generateCount = document.getElementById("generateCount").value;
+
+            for (var i = 0; i < generateCount; i++) {
+                var combination1 = "";
+				var combination2 = "";
+
+                for (var j = 0; j < 4; j++) {
+					var random = Math.floor(Math.random() * list1[j].length);
+                    var selectedChar1 = list1[j][random];
+					var selectedChar2 = list2[j][random];
+                    if (selectedChar1 !== "") {
+                        combination1 += selectedChar1;
+                    }
+					if (selectedChar2 !== "") {
+                        combination2 += selectedChar2;
+                    }
+                }
+
+                combinations.push(combination1 + "（" + combination2 + "）");
+            }
+
+            // 結果を表示
+            var output = document.getElementById("output");
+            output.innerHTML = "";
+            for (var j = 0; j < combinations.length; j++) {
+                output.innerHTML = combinations[j] + "駅" + "\n" + output.innerHTML;
+            }
+        }
+    </script>
+</head>
+<body>
+	<h1>RTMStationNameGenerator</h1>
+    <label for="generateCount">生成個数:</label>
+    <input type="number" id="generateCount" value="10" min="1">
+    <button id="generateButton" onclick="generateCombinations()">生成する！</button>
+    <br>
+    <label for="output">OUTPUT:</label>
+    <br>
+    <textarea id="output" readonly cols="40" rows="10"></textarea>
+</body>
+</html>
