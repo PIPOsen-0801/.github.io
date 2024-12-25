@@ -11,73 +11,64 @@
 			margin: 0;
 			padding: 20px;
 			display: flex;
-			flex-direction: column;
-			/* 全体を縦並びに */
+			flex-direction: column; /* 全体を縦並びに */
 			align-items: center;
 			box-sizing: border-box;
 		}
-
+	
 		.file-input-container {
-			margin-bottom: 20px;
-			/* ファイル選択と他要素の間隔 */
+			margin-bottom: 20px; /* ファイル選択と他要素の間隔 */
 		}
-
+	
 		.container {
 			display: flex;
-			justify-content: center;
-			/* 中央揃え */
-			gap: 20px;
-			/* canvasとcontrolsの間のスペース */
-			width: 100%;
-			/* 横幅をコンテナ内で調整 */
-			max-width: 1200px;
-			/* コンテナの最大幅を設定 */
+			justify-content: center; /* 中央揃え */
+			gap: 20px; /* canvasとcontrolsの間のスペース */
+			width: 100%; /* 横幅をコンテナ内で調整 */
+			max-width: 1200px; /* コンテナの最大幅を設定 */
 		}
-
+	
 		canvas {
 			border: 1px solid #ccc;
-			max-width: 600px;
-			/* 横幅を適切に制限 */
-			max-height: 400px;
-			/* 横幅を適切に制限 */
-			height: auto;
-			/* 縦横比を維持 */
+			max-width: 600px; /* 横幅を適切に制限 */
+			max-height: 400px; /* 横幅を適切に制限 */
+			height: auto; /* 縦横比を維持 */
 		}
-
+	
 		.controls {
 			display: flex;
 			flex-direction: column;
 			gap: 10px;
 		}
-
+	
 		.exif-controls label {
 			display: flex;
 			align-items: center;
 			font-size: 16px;
 		}
-
+	
 		.exif-controls input[type="text"] {
 			margin-left: 10px;
 			width: 200px;
 			font-size: 14px;
 			padding: 5px;
 		}
-
+	
 		.exif-controls input[type="checkbox"] {
 			margin-right: 10px;
 		}
-
+	
 		.buttons {
 			display: flex;
 			gap: 10px;
 		}
-
+	
 		.buttons button {
 			padding: 5px 10px;
 			font-size: 14px;
 			cursor: pointer;
 		}
-
+	
 		.expand-controls input[type="number"] {
 			margin-left: 10px;
 			width: 60px;
@@ -85,43 +76,35 @@
 			padding: 5px;
 		}
 
-		/* スマートフォン用のスタイル */
-		@media (max-width: 768px) {
+		/* Media query for smaller screens */
+		@media screen and (max-width: 600px) {
 			.container {
-				flex-direction: column;
-				align-items: center;
-				/* 中央揃え */
-				width: 100%;
+				flex-direction: column; /* Stack canvas and controls vertically */
+				align-items: center; /* Center align everything */
 			}
 
-			.canvas-wrapper {
-				width: 100%;
-				max-width: 100%;
-				overflow: auto;
-				/* スクロール可能に設定 */
-				display: flex;
-				justify-content: center;
-				/* canvasを中央揃え */
-			}
-
-			canvas {
-				max-width: 100%;
-				/* 横幅を画面いっぱいに収める */
-				max-height: none;
-				/* 高さの制限を解除 */
-				width: auto;
-				/* 縦横比を維持して横幅に合わせる */
-				height: auto;
-				/* 縦横比を維持して高さを調整 */
+			.canvas {
+				width: 100%; /* Make canvas take up full width */
+				max-width: 100%; /* Remove max-width */
+				max-height: 300px; /* Adjust the max height for smaller screens */
 			}
 
 			.controls {
-				width: 100%;
-				margin-top: 20px;
-				display: flex;
-				flex-direction: column;
-				/* コントロール項目を縦に並べる */
-				align-items: stretch;
+				width: 100%; /* Allow controls to stretch to the full width */
+				align-items: center; /* Center controls */
+			}
+
+			.exif-controls input[type="text"] {
+				width: 150px; /* Reduce input field width for smaller screens */
+			}
+
+			.expand-controls input[type="number"] {
+				width: 100px; /* Increase width of the number input fields */
+			}
+
+			.buttons button {
+				width: 100%; /* Make buttons take up the full width */
+				font-size: 12px; /* Adjust button font size */
 			}
 		}
 	</style>
