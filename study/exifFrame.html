@@ -28,10 +28,15 @@
 			max-width: 1200px; /* コンテナの最大幅を設定 */
 		}
 	
+		.canvas-wrapper {
+			width: 600px; /* canvasの幅 */
+			height: 400px; /* canvasの高さ */
+			overflow: auto; /* スクロールを有効にする */
+			border: 1px solid #ccc; /* 枠線を追加 */
+		}
+
 		canvas {
-			border: 1px solid #ccc;
-			max-width: 600px; /* 横幅を適切に制限 */
-			max-height: 400px; /* 横幅を適切に制限 */
+			width: 100%; /* canvasの幅を親要素に合わせる */
 			height: auto; /* 縦横比を維持 */
 		}
 	
@@ -85,7 +90,9 @@
 		<input type="file" id="imageInput" accept="image/*">
 	</div>
 	<div class="container">
-		<canvas id="canvas"></canvas>
+		<div class="canvas-wrapper">
+			<canvas id="canvas"></canvas>
+		</div>
 		<div class="controls">
 			<div class="exif-controls">
 				<label><input type="checkbox" id="cameraNameCheck" checked>Camera Name:</label>
