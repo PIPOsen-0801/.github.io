@@ -133,6 +133,9 @@
 	<h1>EXIF Frame</h1>
 	<div class="file-input-container">
 		<input type="file" id="imageInput" accept="image/*">
+		
+		<label for="resize">resize (px):</label>
+		<input type="number" id="resize" value="3840">
 	</div>
 	<div class="container">
 		<canvas id="canvas"></canvas>
@@ -162,8 +165,6 @@
 				<input type="number" id="expandAll" value="200">
 				<label for="expandDown">Expand down (px):</label>
 				<input type="number" id="expandDown" value="750">
-				<label for="resize">resize (px):</label>
-				<input type="number" id="resize" value="3840">
 			</div>
 		</div>
 	</div>
@@ -195,7 +196,7 @@
 
 		const expandAllInput = document.getElementById('expandAll');
 		const expandDownInput = document.getElementById('expandDown');
-		const resize = document.getElementById('resize').value;
+		const resize = document.getElementById('resize');
 
 		let currentImage = null;
 		let fileName = "frame";
@@ -209,9 +210,9 @@
 				img.onload = async () => {
 					let maxWidth; // リサイズする横幅を設定
 					if (img.height > img.width) {
-						maxWidth = resize / 3 * 2; // 縦が横より大きい場合は横を4000pxに
+						maxWidth = resize.value / 3 * 2; // 縦が横より大きい場合は横を4000pxに
 					} else {
-						maxWidth = resize; // それ以外は横を6000pxに
+						maxWidth = resize.value; // それ以外は横を6000pxに
 					}
 					ratio = maxWidth / 6000;
 
