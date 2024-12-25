@@ -12,27 +12,36 @@
 			padding: 20px;
 			display: flex;
 			flex-direction: column;
+			/* 全体を縦並びに */
 			align-items: center;
 			box-sizing: border-box;
 		}
 
 		.file-input-container {
 			margin-bottom: 20px;
+			/* ファイル選択と他要素の間隔 */
 		}
 
 		.container {
 			display: flex;
 			justify-content: center;
+			/* 中央揃え */
 			gap: 20px;
+			/* canvasとcontrolsの間のスペース */
 			width: 100%;
+			/* 横幅をコンテナ内で調整 */
 			max-width: 1200px;
+			/* コンテナの最大幅を設定 */
 		}
 
 		canvas {
 			border: 1px solid #ccc;
 			max-width: 600px;
+			/* 横幅を適切に制限 */
 			max-height: 400px;
+			/* 横幅を適切に制限 */
 			height: auto;
+			/* 縦横比を維持 */
 		}
 
 		.controls {
@@ -80,7 +89,8 @@
 		@media (max-width: 768px) {
 			.container {
 				flex-direction: column;
-				align-items: stretch;
+				align-items: center;
+				/* 中央揃え */
 				width: 100%;
 			}
 
@@ -88,15 +98,30 @@
 				width: 100%;
 				max-width: 100%;
 				overflow: auto;
+				/* スクロール可能に設定 */
+				display: flex;
+				justify-content: center;
+				/* canvasを中央揃え */
 			}
 
 			canvas {
-				width: 100%;
+				max-width: 100%;
+				/* 横幅を画面いっぱいに収める */
+				max-height: none;
+				/* 高さの制限を解除 */
+				width: auto;
+				/* 縦横比を維持して横幅に合わせる */
 				height: auto;
+				/* 縦横比を維持して高さを調整 */
 			}
 
 			.controls {
+				width: 100%;
 				margin-top: 20px;
+				display: flex;
+				flex-direction: column;
+				/* コントロール項目を縦に並べる */
+				align-items: stretch;
 			}
 		}
 	</style>
@@ -109,9 +134,7 @@
 		<input type="file" id="imageInput" accept="image/*">
 	</div>
 	<div class="container">
-		<div class="canvas-wrapper">
-			<canvas id="canvas"></canvas>
-		</div>
+		<canvas id="canvas"></canvas>
 		<div class="controls">
 			<div class="exif-controls">
 				<label><input type="checkbox" id="cameraNameCheck" checked>Camera Name:</label>
@@ -185,11 +208,11 @@
 				img.onload = async () => {
 					let maxWidth; // リサイズする横幅を設定
 					if (img.height > img.width) {
-						maxWidth = resize/3*2; // 縦が横より大きい場合は横を4000pxに
+						maxWidth = resize / 3 * 2; // 縦が横より大きい場合は横を4000pxに
 					} else {
 						maxWidth = resize; // それ以外は横を6000pxに
 					}
-					ratio = maxWidth/6000;
+					ratio = maxWidth / 6000;
 
 					// 元画像の比率を計算してリサイズ
 					const scale = maxWidth / img.width; // 横幅に基づく拡大縮小率
@@ -237,8 +260,8 @@
 			const color2Input = document.getElementById('color2');
 
 			// 拡張値を取得
-			const expandAll = parseInt(expandAllInput.value*ratio, 10);
-			const expandDown = parseInt(expandDownInput.value*ratio, 10);
+			const expandAll = parseInt(expandAllInput.value * ratio, 10);
+			const expandDown = parseInt(expandDownInput.value * ratio, 10);
 
 			// 拡張部分の色を設定
 			const expandColor1 = color0Input.value || "#000000";
@@ -267,17 +290,17 @@
 			// 左下 (カメラ名 と レンズ名)
 			const leftBottomText = `${cameraName.value}`;
 			const leftBottomText2 = `${lens.value}`;
-			ctx.font = 500*ratio + " " + 150*ratio + "px Inter";
+			ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
 			ctx.fillStyle = color1;
 			ctx.strokeStyle = color1;
-			ctx.lineWidth = 3*ratio;
-			ctx.strokeText(leftBottomText, expandAll+50*ratio, canvas.height + 300*ratio - expandDown);
-			ctx.fillText(leftBottomText, expandAll+50*ratio, canvas.height + 300*ratio - expandDown);
+			ctx.lineWidth = 3 * ratio;
+			ctx.strokeText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
+			ctx.fillText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
 
-			ctx.font = 100*ratio + "px Inter";
+			ctx.font = 100 * ratio + "px Inter";
 			ctx.fillStyle = color2;
 			//ctx.strokeText(leftBottomText2, expandAll+50, canvas.height + 450 - expandDown);
-			ctx.fillText(leftBottomText2, expandAll+50*ratio, canvas.height + 450*ratio - expandDown);
+			ctx.fillText(leftBottomText2, expandAll + 50 * ratio, canvas.height + 450 * ratio - expandDown);
 
 			// 右下 (絞り シャッタースピード ISO感度 焦点距離)
 			const rightBottomText = [
@@ -288,24 +311,24 @@
 
 			const rightBottomText2 = `${focalLength.value}`;
 
-			ctx.font = 500*ratio + " " + 150*ratio + "px Inter";
+			ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
 			const rightTextX = canvas.width - ctx.measureText(rightBottomText).width - expandAll;
 
 			ctx.fillStyle = color1;
-			ctx.strokeText(rightBottomText, rightTextX-50*ratio, canvas.height + 300*ratio - expandDown);
-			ctx.fillText(rightBottomText, rightTextX-50*ratio, canvas.height + 300*ratio - expandDown);
+			ctx.strokeText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
+			ctx.fillText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
 
 			ctx.fillStyle = color2;
-			ctx.font = 100*ratio + "px Inter";
+			ctx.font = 100 * ratio + "px Inter";
 			//ctx.strokeText(rightBottomText2, rightTextX-100, canvas.height + 450 - expandDown);
-			ctx.fillText(rightBottomText2, rightTextX-50*ratio, canvas.height + 450*ratio - expandDown);
+			ctx.fillText(rightBottomText2, rightTextX - 50 * ratio, canvas.height + 450 * ratio - expandDown);
 		}
 
 		updateTextButton.addEventListener('click', drawTextOverlay);
 
 		downloadButton.addEventListener('click', () => {
 			const link = document.createElement('a');
-			link.download = "f"+fileName;
+			link.download = "f" + fileName;
 			link.href = canvas.toDataURL();
 			link.click();
 		});
