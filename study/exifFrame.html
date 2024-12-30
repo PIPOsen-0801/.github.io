@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Photo Text Overlay</title>
+	<title>EXIF Frame</title>
 	<style>
 		body {
 			font-family: Arial, sans-serif;
@@ -56,7 +56,24 @@
 			font-size: 16px;
 		}
 
+		.exif-controls2 label {
+			display: flex;
+			align-items: center;
+			font-size: 16px;
+		}
+
+		.expand-controls label {
+			margin-left: -1px;
+		}
+
 		.exif-controls input[type="text"] {
+			margin-left: 10px;
+			width: 200px;
+			font-size: 14px;
+			padding: 5px;
+		}
+
+		#camera-brand {
 			margin-left: 10px;
 			width: 200px;
 			font-size: 14px;
@@ -79,7 +96,7 @@
 		}
 
 		.expand-controls input[type="number"] {
-			margin-left: 10px;
+			margin-left: 1px;
 			width: 60px;
 			font-size: 14px;
 			padding: 5px;
@@ -133,7 +150,7 @@
 	<h1>EXIF Frame</h1>
 	<div class="file-input-container">
 		<input type="file" id="imageInput" accept="image/*">
-		
+
 		<label for="resize">resize (px):</label>
 		<input type="number" id="resize" value="3840">
 	</div>
@@ -153,17 +170,29 @@
 				<input type="text" id="aperture" value="N/A">
 				<label><input type="checkbox" id="focalLengthCheck" checked>Focal Length:</label>
 				<input type="text" id="focalLength" value="N/A">
+				<label><input type="checkbox" id="brandCheck" checked>Brand:</label>
+				<select id="camera-brand" name="camera-brand">
+					<option value="null">(None)</option>
+					<option value="Canon">Canon</option>
+					<option value="Nikon">Nikon</option>
+					<option value="SONY">Sony</option>
+					<option value="SONY[White]">Sony[White]</option>
+				</select>
 			</div>
-			<label for="color0">Color 0:</label>
-			<input type="text" id="color0" value="#000000">
-			<label for="color1">Color 1:</label>
-			<input type="text" id="color1" value="#FFFFFF">
-			<label for="color2">Color 2:</label>
-			<input type="text" id="color2" value="#444444">
+			<div class="exif-controls2">
+				<label for="color0">Color 0:</label>
+				<input type="text" id="color0" value="#000000">
+				<label for="color1">Color 1:</label>
+				<input type="text" id="color1" value="#FFFFFF">
+				<label for="color2">Color 2:</label>
+				<input type="text" id="color2" value="#444444">
+			</div>
 			<div class="expand-controls">
-				<label for="expandAll">Expand all sides (px):</label>
+				<label for="expandAll">ExpandAllSides (px):</label>
 				<input type="number" id="expandAll" value="200">
-				<label for="expandDown">Expand down (px):</label>
+				<label for="expandUp">Expand up:</label>
+				<input type="number" id="expandUp" value="200">
+				<label for="expandDown">Expand down:</label>
 				<input type="number" id="expandDown" value="750">
 			</div>
 		</div>
@@ -186,6 +215,7 @@
 		const aperture = document.getElementById('aperture');
 		const focalLength = document.getElementById('focalLength');
 		const lens = document.getElementById('lens');
+		const brand = document.getElementById('camera-brand');
 
 		const cameraNameCheck = document.getElementById('cameraNameCheck');
 		const lensCheck = document.getElementById('lensCheck');
@@ -193,8 +223,10 @@
 		const shutterSpeedCheck = document.getElementById('shutterSpeedCheck');
 		const apertureCheck = document.getElementById('apertureCheck');
 		const focalLengthCheck = document.getElementById('focalLengthCheck');
+		const brandCheck = document.getElementById('brandCheck');
 
 		const expandAllInput = document.getElementById('expandAll');
+		const expandUpInput = document.getElementById('expandUp');
 		const expandDownInput = document.getElementById('expandDown');
 		const resize = document.getElementById('resize');
 
@@ -251,89 +283,126 @@
 				if (shutterSpeedCheck.checked) shutterSpeed.value = exifData.shutterSpeed || 'N/A';
 				if (apertureCheck.checked) aperture.value = exifData.aperture || 'N/A';
 				if (focalLengthCheck.checked) focalLength.value = exifData.focalLength || 'N/A';
+				if (brandCheck.checked) brand.value = exifData.brand || 'null';
 			}
 		}
 
-		function drawTextOverlay() {
-			if (!canvas.width || !canvas.height || !currentImage) return;
+		async function drawTextOverlay() {
+    if (!canvas.width || !canvas.height || !currentImage) return;
 
-			const color0Input = document.getElementById('color0');
-			const color1Input = document.getElementById('color1');
-			const color2Input = document.getElementById('color2');
+    const color0Input = document.getElementById('color0');
+    const color1Input = document.getElementById('color1');
+    const color2Input = document.getElementById('color2');
 
-			// 拡張値を取得
-			const expandAll = parseInt(expandAllInput.value * ratio, 10);
-			const expandDown = parseInt(expandDownInput.value * ratio, 10);
+    const expandAll = parseInt(expandAllInput.value * ratio, 10);
+    const expandUp = parseInt(expandUpInput.value * ratio, 10);
+    const expandDown = parseInt(expandDownInput.value * ratio, 10);
 
-			// 拡張部分の色を設定
-			const expandColor1 = color0Input.value || "#000000";
+    const expandColor1 = color0Input.value || "#000000";
+    canvas.width = currentImage.width + 2 * expandAll;
+    canvas.height = currentImage.height + expandUp + expandDown;
 
-			// 画像を拡張
-			canvas.width = currentImage.width + 2 * expandAll;
-			canvas.height = currentImage.height + expandAll + expandDown; // 上方向も拡張
+    ctx.fillStyle = expandColor1;
+    ctx.fillRect(0, 0, expandAll, canvas.height);
+    ctx.fillRect(canvas.width - expandAll, 0, expandAll, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, expandUp);
+    ctx.fillRect(0, canvas.height - expandDown, canvas.width, expandDown);
 
-			// 拡張部分に色を塗る
-			// 左右の拡張部分
-			ctx.fillStyle = expandColor1;
-			ctx.fillRect(0, 0, expandAll, canvas.height); // 左
-			ctx.fillRect(canvas.width - expandAll, 0, expandAll, canvas.height); // 右
-			ctx.fillRect(0, 0, canvas.width, expandAll); // 上
+    const offsetX = expandAll;
+    const offsetY = expandUp;
+    ctx.drawImage(currentImage, offsetX, offsetY);
 
-			// 下方向の拡張部分
-			ctx.fillStyle = expandColor1;
-			ctx.fillRect(0, canvas.height - expandDown, canvas.width, expandDown); // 下
+    const color1 = color1Input.value || "#FFFFFF";
+    const color2 = color2Input.value || "#444444";
+    const leftBottomText = `${cameraName.value}`;
+    const leftBottomText2 = `${lens.value}`;
+    ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
+    ctx.fillStyle = color1;
+    ctx.strokeStyle = color1;
+    ctx.lineWidth = 3 * ratio;
+    ctx.strokeText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
+    ctx.fillText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
 
-			const offsetX = expandAll; // 左側の余白分だけ右にシフト
-			const offsetY = expandAll; // 上側の余白分だけ下にシフト
-			ctx.drawImage(currentImage, offsetX, offsetY); //
+    ctx.font = 100 * ratio + "px Inter";
+    ctx.fillStyle = color2;
+    ctx.fillText(leftBottomText2, expandAll + 50 * ratio, canvas.height + 450 * ratio - expandDown);
 
-			const color1 = color1Input.value || "#FFFFFF"; // Default to white if not provided
-			const color2 = color2Input.value || "#444444"; // Default to white if not provided
-			// 左下 (カメラ名 と レンズ名)
-			const leftBottomText = `${cameraName.value}`;
-			const leftBottomText2 = `${lens.value}`;
-			ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
-			ctx.fillStyle = color1;
-			ctx.strokeStyle = color1;
-			ctx.lineWidth = 3 * ratio;
-			ctx.strokeText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
-			ctx.fillText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
+    const rightBottomText = [
+        `${aperture.value}`,
+        `${shutterSpeed.value}`,
+        `${iso.value}`
+    ].join(' ');
 
-			ctx.font = 100 * ratio + "px Inter";
-			ctx.fillStyle = color2;
-			//ctx.strokeText(leftBottomText2, expandAll+50, canvas.height + 450 - expandDown);
-			ctx.fillText(leftBottomText2, expandAll + 50 * ratio, canvas.height + 450 * ratio - expandDown);
+    const rightBottomText2 = `${focalLength.value}`;
+    ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
+    const rightTextX = canvas.width - ctx.measureText(rightBottomText).width - expandAll;
 
-			// 右下 (絞り シャッタースピード ISO感度 焦点距離)
-			const rightBottomText = [
-				`${aperture.value}`,
-				`${shutterSpeed.value}`,
-				`ISO-${iso.value}`
-			].join(' ');
+    ctx.fillStyle = color1;
+    ctx.strokeText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
+    ctx.fillText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
 
-			const rightBottomText2 = `${focalLength.value}`;
+    ctx.fillStyle = color2;
+    ctx.font = 100 * ratio + "px Inter";
+    ctx.fillText(rightBottomText2, rightTextX - 50 * ratio, canvas.height + 450 * ratio - expandDown);
 
-			ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
-			const rightTextX = canvas.width - ctx.measureText(rightBottomText).width - expandAll;
+    if (brand.value == "null") return;
 
-			ctx.fillStyle = color1;
-			ctx.strokeText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
-			ctx.fillText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
+    // SVG画像をロード
+    const svgList = {
+        "Canon": loadLocalSVG("canon-logo.svg"),
+        "Nikon": loadLocalSVG("nikon-logo.svg"),
+        "SONY": loadLocalSVG("sony-logo.svg"),
+		"SONY[White]": loadLocalSVG("sony-white.svg")
+    };
 
-			ctx.fillStyle = color2;
-			ctx.font = 100 * ratio + "px Inter";
-			//ctx.strokeText(rightBottomText2, rightTextX-100, canvas.height + 450 - expandDown);
-			ctx.fillText(rightBottomText2, rightTextX - 50 * ratio, canvas.height + 450 * ratio - expandDown);
-		}
+	const svgRatio = {
+        "Canon": [1000,200],
+        "Nikon": [1250,1250],
+        "SONY": [1000,200]
+    };
 
-		updateTextButton.addEventListener('click', drawTextOverlay);
+    // 画像の読み込みを待つ
+    const svgImages = await Promise.all(Object.values(svgList));
+    const selectedSvgImage = svgImages[Object.keys(svgList).indexOf(brand.value)];
 
-		downloadButton.addEventListener('click', () => {
-			const link = document.createElement('a');
-			link.download = "f" + fileName;
-			link.href = canvas.toDataURL();
-			link.click();
-		});
+    // SVGをキャンバスに描画
+    const svgX = canvas.width / 2 - 400 * ratio;
+    const svgY = canvas.height - 550 * ratio;
+    const svgWidth = svgRatio[brand.value][0] * ratio;
+    const svgHeight = svgRatio[brand.value][1] * ratio;
+    ctx.drawImage(selectedSvgImage, svgX, svgY, svgWidth, svgHeight);
+}
+
+updateTextButton.addEventListener('click', drawTextOverlay);
+
+downloadButton.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = "f" + fileName;
+    link.href = canvas.toDataURL();
+    link.click();
+});
+
+// ローカルのSVGを読み込む関数
+async function loadLocalSVG(filePath) {
+    const response = await fetch(filePath);
+    const svgText = await response.text();
+    return loadSVGToImage(svgText);
+}
+
+// SVGを画像に変換する関数
+function loadSVGToImage(svgString) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(svgBlob);
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            resolve(img);
+        };
+        img.src = url;
+    });
+}
+
 
 		async function readExifData(file) {
 			return new Promise((resolve, reject) => {
@@ -357,10 +426,11 @@
 							resolve({
 								camera: allMetaData.Model ? `${allMetaData.Model}` : null,
 								lens: EXIF.getTag(this, "LensModel") || null,
-								iso: allMetaData.ISOSpeedRatings || null,
+								iso: "ISO-" + allMetaData.ISOSpeedRatings || null,
 								shutterSpeed: ss,
 								aperture: allMetaData.FNumber ? `f/${allMetaData.FNumber}` : null,
-								focalLength: allMetaData.FocalLength ? `${allMetaData.FocalLength}mm` : null
+								focalLength: allMetaData.FocalLength ? `${allMetaData.FocalLength}mm` : null,
+								brand: allMetaData.Make ? allMetaData.Make : null
 							});
 						});
 					} catch (error) {
