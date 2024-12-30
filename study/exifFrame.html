@@ -368,7 +368,7 @@
 			const svgImages = await Promise.all(Object.values(svgList));
 			const selectedSvgImage = svgImages[Object.keys(svgList).indexOf(brand.value)];
 
-			const svgX = canvas.width / 2 - (svgRatio[brand.value][0] - 400) / 2 * ratio;
+			const svgX = canvas.width / 2 - svgRatio[brand.value][0] / 2 * ratio;
 			const svgY = canvas.height - 550 * ratio;
 			const svgWidth = svgRatio[brand.value][0] * ratio;
 			const svgHeight = svgRatio[brand.value][1] * ratio;
