@@ -379,12 +379,12 @@
 		"Leica": [400,400],
 		"Olympus": [1000,200],
 		"Pentax": [1000,200],
-		"Ricoh": [1000,200],
+		"Ricoh": [1000,300],
 		"Panasonic": [1000,200],
 		"Panasonic[Black]": [1000,200],
 		"Lumix": [1000,200],
 		"Lumix[Black]": [1000,200],
-		"Apple": [500,500],
+		"Apple": [275,300],
 		"Apple[Black]": [500,500]
     };
 
@@ -393,7 +393,7 @@
     const selectedSvgImage = svgImages[Object.keys(svgList).indexOf(brand.value)];
 
     // SVGをキャンバスに描画
-    const svgX = canvas.width / 2 - 400 * ratio;
+    const svgX = canvas.width / 2 - (svgRatio[brand.value][0]-400)/2 * ratio;
     const svgY = canvas.height - 550 * ratio;
     const svgWidth = svgRatio[brand.value][0] * ratio;
     const svgHeight = svgRatio[brand.value][1] * ratio;
