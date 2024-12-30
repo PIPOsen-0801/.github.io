@@ -175,8 +175,18 @@
 					<option value="null">(None)</option>
 					<option value="Canon">Canon</option>
 					<option value="Nikon">Nikon</option>
-					<option value="SONY">Sony</option>
-					<option value="SONY[White]">Sony[White]</option>
+					<option value="SONY">Sony[White]</option>
+					<option value="SONY[Black]">Sony[Black]</option>
+					<option value="Leica">Leica</option>
+					<option value="Olympus">Olympus</option>
+					<option value="Pentax">Pentax</option>
+					<option value="Ricoh">Ricoh</option>
+					<option value="Panasonic">Panasonic[White]</option>
+					<option value="Panasonic[Black]">Panasonic[Black]</option>
+					<option value="Lumix">Lumix[White]</option>
+					<option value="Lumix[Black]">Lumix[Black]</option>
+					<option value="Apple">Apple[White]</option>
+					<option value="Apple[Black]">Apple[Black]</option>
 				</select>
 			</div>
 			<div class="exif-controls2">
@@ -351,15 +361,33 @@
     const svgList = {
         "Canon": loadLocalSVG("canon-logo.svg"),
         "Nikon": loadLocalSVG("nikon-logo.svg"),
-        "SONY": loadLocalSVG("sony-logo.svg"),
-		"SONY[White]": loadLocalSVG("sony-white.svg")
+        "SONY": loadLocalSVG("sony-black.svg"),
+		"SONY[White]": loadLocalSVG("sony-white.svg"),
+		"Leica": loadLocalSVG("leica-logo.svg"),
+		"Olympus": loadLocalSVG("olympus-logo.svg"),
+		"Pentax": loadLocalSVG("pentax-logo.svg"),
+		"Ricoh": loadLocalSVG("ricoh-logo.svg"),
+		"Panasonic": loadLocalSVG("panasonic-black.svg"),
+		"Lumix": loadLocalSVG("lumix-black.svg"),
+		"Apple": loadLocalSVG("apple-white.svg"),
+		"Apple[Black]": loadLocalSVG("apple-black.svg")
     };
 
 	const svgRatio = {
         "Canon": [1000,200],
         "Nikon": [1250,1250],
         "SONY": [1000,200],
-		"SONY[White]": [1000,200]
+		"SONY[White]": [1000,200],
+		"Leica": [400,400],
+		"Olympus": [1000,200],
+		"Pentax": [1000,200],
+		"Ricoh": [1000,200],
+		"Panasonic": [1000,200],
+		"Panasonic[Black]": [1000,200],
+		"Lumix": [1000,200],
+		"Lumix[Black]": [1000,200],
+		"Apple": [500,500],
+		"Apple[Black]": [500,500]
     };
 
     // 画像の読み込みを待つ
