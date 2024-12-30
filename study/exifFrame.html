@@ -12,36 +12,27 @@
 			padding: 20px;
 			display: flex;
 			flex-direction: column;
-			/* 全体を縦並びに */
 			align-items: center;
 			box-sizing: border-box;
 		}
 
 		.file-input-container {
 			margin-bottom: 20px;
-			/* ファイル選択と他要素の間隔 */
 		}
 
 		.container {
 			display: flex;
 			justify-content: center;
-			/* 中央揃え */
 			gap: 20px;
-			/* canvasとcontrolsの間のスペース */
 			width: 100%;
-			/* 横幅をコンテナ内で調整 */
 			max-width: 1200px;
-			/* コンテナの最大幅を設定 */
 		}
 
 		canvas {
 			border: 1px solid #ccc;
 			max-width: 600px;
-			/* 横幅を適切に制限 */
 			max-height: 400px;
-			/* 横幅を適切に制限 */
 			height: auto;
-			/* 縦横比を維持 */
 		}
 
 		.controls {
@@ -102,12 +93,10 @@
 			padding: 5px;
 		}
 
-		/* スマートフォン用のスタイル */
 		@media (max-width: 768px) {
 			.container {
 				flex-direction: column;
 				align-items: center;
-				/* 中央揃え */
 				width: 100%;
 			}
 
@@ -115,21 +104,15 @@
 				width: 100%;
 				max-width: 100%;
 				overflow: auto;
-				/* スクロール可能に設定 */
 				display: flex;
 				justify-content: center;
-				/* canvasを中央揃え */
 			}
 
 			canvas {
 				max-width: 100%;
-				/* 横幅を画面いっぱいに収める */
 				max-height: none;
-				/* 高さの制限を解除 */
 				width: auto;
-				/* 縦横比を維持して横幅に合わせる */
 				height: auto;
-				/* 縦横比を維持して高さを調整 */
 			}
 
 			.controls {
@@ -137,7 +120,6 @@
 				margin-top: 20px;
 				display: flex;
 				flex-direction: column;
-				/* コントロール項目を縦に並べる */
 				align-items: stretch;
 			}
 
@@ -248,35 +230,31 @@
 			if (file) {
 				const img = new Image();
 				img.onload = async () => {
-					let maxWidth; // リサイズする横幅を設定
+					let maxWidth;
 					if (img.height > img.width) {
-						maxWidth = resize.value / 3 * 2; // 縦が横より大きい場合は横を4000pxに
+						maxWidth = resize.value / 3 * 2; 
 					} else {
-						maxWidth = resize.value; // それ以外は横を6000pxに
+						maxWidth = resize.value;
 					}
 					ratio = maxWidth / 6000;
 
-					// 元画像の比率を計算してリサイズ
-					const scale = maxWidth / img.width; // 横幅に基づく拡大縮小率
+					const scale = maxWidth / img.width;
 					const newWidth = maxWidth;
-					const newHeight = img.height * scale; // 縦幅を比率に基づいて計算
+					const newHeight = img.height * scale;
 
-					// Canvasにリサイズ画像を描画
 					canvas.width = newWidth;
 					canvas.height = newHeight;
 					ctx.drawImage(img, 0, 0, newWidth, newHeight);
 
-					// リサイズ後の画像を保持
 					const resizedImg = new Image();
-					resizedImg.src = canvas.toDataURL(); // CanvasからデータURLを生成してImageにセット
+					resizedImg.src = canvas.toDataURL();
 					currentImage = resizedImg;
 
-					await extractExifData(file); // Exif情報の取得
-					drawTextOverlay(); // Exif情報を取得後にオーバーレイを描画
+					await extractExifData(file);
+					drawTextOverlay();
 				};
 				img.src = URL.createObjectURL(file);
 
-				// 再選択可能にする
 				event.target.value = '';
 			}
 		});
@@ -296,139 +274,134 @@
 		}
 
 		async function drawTextOverlay() {
-    if (!canvas.width || !canvas.height || !currentImage) return;
+			if (!canvas.width || !canvas.height || !currentImage) return;
 
-    const color0Input = document.getElementById('color0');
-    const color1Input = document.getElementById('color1');
-    const color2Input = document.getElementById('color2');
+			const color0Input = document.getElementById('color0');
+			const color1Input = document.getElementById('color1');
+			const color2Input = document.getElementById('color2');
 
-    const expandAll = parseInt(expandAllInput.value * ratio, 10);
-    const expandUp = parseInt(expandUpInput.value * ratio, 10);
-    const expandDown = parseInt(expandDownInput.value * ratio, 10);
+			const expandAll = parseInt(expandAllInput.value * ratio, 10);
+			const expandUp = parseInt(expandUpInput.value * ratio, 10);
+			const expandDown = parseInt(expandDownInput.value * ratio, 10);
 
-    const expandColor1 = color0Input.value || "#000000";
-    canvas.width = currentImage.width + 2 * expandAll;
-    canvas.height = currentImage.height + expandUp + expandDown;
+			const expandColor1 = color0Input.value || "#000000";
+			canvas.width = currentImage.width + 2 * expandAll;
+			canvas.height = currentImage.height + expandUp + expandDown;
 
-    ctx.fillStyle = expandColor1;
-    ctx.fillRect(0, 0, expandAll, canvas.height);
-    ctx.fillRect(canvas.width - expandAll, 0, expandAll, canvas.height);
-    ctx.fillRect(0, 0, canvas.width, expandUp);
-    ctx.fillRect(0, canvas.height - expandDown, canvas.width, expandDown);
+			ctx.fillStyle = expandColor1;
+			ctx.fillRect(0, 0, expandAll, canvas.height);
+			ctx.fillRect(canvas.width - expandAll, 0, expandAll, canvas.height);
+			ctx.fillRect(0, 0, canvas.width, expandUp);
+			ctx.fillRect(0, canvas.height - expandDown, canvas.width, expandDown);
 
-    const offsetX = expandAll;
-    const offsetY = expandUp;
-    ctx.drawImage(currentImage, offsetX, offsetY);
+			const offsetX = expandAll;
+			const offsetY = expandUp;
+			ctx.drawImage(currentImage, offsetX, offsetY);
 
-    const color1 = color1Input.value || "#FFFFFF";
-    const color2 = color2Input.value || "#444444";
-    const leftBottomText = `${cameraName.value}`;
-    const leftBottomText2 = `${lens.value}`;
-    ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
-    ctx.fillStyle = color1;
-    ctx.strokeStyle = color1;
-    ctx.lineWidth = 3 * ratio;
-    ctx.strokeText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
-    ctx.fillText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
+			const color1 = color1Input.value || "#FFFFFF";
+			const color2 = color2Input.value || "#444444";
+			const leftBottomText = `${cameraName.value}`;
+			const leftBottomText2 = `${lens.value}`;
+			ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
+			ctx.fillStyle = color1;
+			ctx.strokeStyle = color1;
+			ctx.lineWidth = 3 * ratio;
+			ctx.strokeText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
+			ctx.fillText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
 
-    ctx.font = 100 * ratio + "px Inter";
-    ctx.fillStyle = color2;
-    ctx.fillText(leftBottomText2, expandAll + 50 * ratio, canvas.height + 450 * ratio - expandDown);
+			ctx.font = 100 * ratio + "px Inter";
+			ctx.fillStyle = color2;
+			ctx.fillText(leftBottomText2, expandAll + 50 * ratio, canvas.height + 450 * ratio - expandDown);
 
-    const rightBottomText = [
-        `${aperture.value}`,
-        `${shutterSpeed.value}`,
-        `${iso.value}`
-    ].join(' ');
+			const rightBottomText = [
+				`${aperture.value}`,
+				`${shutterSpeed.value}`,
+				`${iso.value}`
+			].join(' ');
 
-    const rightBottomText2 = `${focalLength.value}`;
-    ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
-    const rightTextX = canvas.width - ctx.measureText(rightBottomText).width - expandAll;
+			const rightBottomText2 = `${focalLength.value}`;
+			ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
+			const rightTextX = canvas.width - ctx.measureText(rightBottomText).width - expandAll;
 
-    ctx.fillStyle = color1;
-    ctx.strokeText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
-    ctx.fillText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
+			ctx.fillStyle = color1;
+			ctx.strokeText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
+			ctx.fillText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
 
-    ctx.fillStyle = color2;
-    ctx.font = 100 * ratio + "px Inter";
-    ctx.fillText(rightBottomText2, rightTextX - 50 * ratio, canvas.height + 450 * ratio - expandDown);
+			ctx.fillStyle = color2;
+			ctx.font = 100 * ratio + "px Inter";
+			ctx.fillText(rightBottomText2, rightTextX - 50 * ratio, canvas.height + 450 * ratio - expandDown);
 
-    if (brand.value == "null") return;
+			if (brand.value == "null") return;
 
-    // SVG画像をロード
-    const svgList = {
-        "Canon": loadLocalSVG("canon-logo.svg"),
-        "Nikon": loadLocalSVG("nikon-logo.svg"),
-        "SONY": loadLocalSVG("sony-black.svg"),
-		"SONY[White]": loadLocalSVG("sony-white.svg"),
-		"Leica": loadLocalSVG("leica-logo.svg"),
-		"Olympus": loadLocalSVG("olympus-logo.svg"),
-		"Pentax": loadLocalSVG("pentax-logo.svg"),
-		"Ricoh": loadLocalSVG("ricoh-logo.svg"),
-		"Panasonic": loadLocalSVG("panasonic-black.svg"),
-		"Lumix": loadLocalSVG("lumix-black.svg"),
-		"Apple": loadLocalSVG("apple-white.svg"),
-		"Apple[Black]": loadLocalSVG("apple-black.svg")
-    };
+			const svgList = {
+				"Canon": loadLocalSVG("canon-logo.svg"),
+				"Nikon": loadLocalSVG("nikon-logo.svg"),
+				"SONY": loadLocalSVG("sony-white.svg"),
+				"SONY[Black]": loadLocalSVG("sony-black.svg"),
+				"Leica": loadLocalSVG("leica-logo.svg"),
+				"Olympus": loadLocalSVG("olympus-logo.svg"),
+				"Pentax": loadLocalSVG("pentax-logo.svg"),
+				"Ricoh": loadLocalSVG("ricoh-logo.svg"),
+				"Panasonic": loadLocalSVG("panasonic-black.svg"),
+				"Lumix": loadLocalSVG("lumix-black.svg"),
+				"Apple": loadLocalSVG("apple-white.svg"),
+				"Apple[Black]": loadLocalSVG("apple-black.svg")
+			};
 
-	const svgRatio = {
-        "Canon": [1000,200],
-        "Nikon": [1250,1250],
-        "SONY": [1000,200],
-		"SONY[White]": [1000,200],
-		"Leica": [400,400],
-		"Olympus": [1000,200],
-		"Pentax": [1000,200],
-		"Ricoh": [1000,300],
-		"Panasonic": [1000,200],
-		"Panasonic[Black]": [1000,200],
-		"Lumix": [1000,200],
-		"Lumix[Black]": [1000,200],
-		"Apple": [275,300],
-		"Apple[Black]": [500,500]
-    };
+			const svgRatio = {
+				"Canon": [1000, 200],
+				"Nikon": [1250, 1250],
+				"SONY": [1000, 200],
+				"SONY[Black]": [1000, 200],
+				"Leica": [400, 400],
+				"Olympus": [1000, 200],
+				"Pentax": [1000, 200],
+				"Ricoh": [1000, 300],
+				"Panasonic": [1000, 200],
+				"Panasonic[Black]": [1000, 200],
+				"Lumix": [1000, 200],
+				"Lumix[Black]": [1000, 200],
+				"Apple": [275, 300],
+				"Apple[Black]": [500, 500]
+			};
 
-    // 画像の読み込みを待つ
-    const svgImages = await Promise.all(Object.values(svgList));
-    const selectedSvgImage = svgImages[Object.keys(svgList).indexOf(brand.value)];
+			const svgImages = await Promise.all(Object.values(svgList));
+			const selectedSvgImage = svgImages[Object.keys(svgList).indexOf(brand.value)];
 
-    // SVGをキャンバスに描画
-    const svgX = canvas.width / 2 - (svgRatio[brand.value][0]-400)/2 * ratio;
-    const svgY = canvas.height - 550 * ratio;
-    const svgWidth = svgRatio[brand.value][0] * ratio;
-    const svgHeight = svgRatio[brand.value][1] * ratio;
-    ctx.drawImage(selectedSvgImage, svgX, svgY, svgWidth, svgHeight);
-}
+			const svgX = canvas.width / 2 - (svgRatio[brand.value][0] - 400) / 2 * ratio;
+			const svgY = canvas.height - 550 * ratio;
+			const svgWidth = svgRatio[brand.value][0] * ratio;
+			const svgHeight = svgRatio[brand.value][1] * ratio;
+			ctx.drawImage(selectedSvgImage, svgX, svgY, svgWidth, svgHeight);
+		}
 
-updateTextButton.addEventListener('click', drawTextOverlay);
+		updateTextButton.addEventListener('click', drawTextOverlay);
 
-downloadButton.addEventListener('click', () => {
-    const link = document.createElement('a');
-    link.download = "f" + fileName;
-    link.href = canvas.toDataURL();
-    link.click();
-});
+		downloadButton.addEventListener('click', () => {
+			const link = document.createElement('a');
+			link.download = "f" + fileName;
+			link.href = canvas.toDataURL();
+			link.click();
+		});
 
-// ローカルのSVGを読み込む関数
-async function loadLocalSVG(filePath) {
-    const response = await fetch(filePath);
-    const svgText = await response.text();
-    return loadSVGToImage(svgText);
-}
+		async function loadLocalSVG(filePath) {
+			const response = await fetch(filePath);
+			const svgText = await response.text();
+			return loadSVGToImage(svgText);
+		}
 
-// SVGを画像に変換する関数
-function loadSVGToImage(svgString) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-        const url = URL.createObjectURL(svgBlob);
-        img.onload = () => {
-            URL.revokeObjectURL(url);
-            resolve(img);
-        };
-        img.src = url;
-    });
-}
+		function loadSVGToImage(svgString) {
+			return new Promise((resolve) => {
+				const img = new Image();
+				const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+				const url = URL.createObjectURL(svgBlob);
+				img.onload = () => {
+					URL.revokeObjectURL(url);
+					resolve(img);
+				};
+				img.src = url;
+			});
+		}
 
 
 		async function readExifData(file) {
@@ -468,7 +441,6 @@ function loadSVGToImage(svgString) {
 			});
 		}
 
-		// 説明メッセージを初期状態で非表示に設定（要素がない場合、再作成可）
 		if (!document.getElementById('exifLibraryInfo')) {
 			const exifLibraryInfo = document.createElement('p');
 			exifLibraryInfo.id = 'exifLibraryInfo';
