@@ -313,6 +313,10 @@
 			ctx.fillStyle = color2;
 			ctx.fillText(leftBottomText2, expandAll + 50 * ratio, canvas.height + 450 * ratio - expandDown);
 
+			const textWidth = ctx.measureText(leftBottomText2).width;
+			const leftX = expandAll + 50 * ratio;
+			const rightX = leftX + textWidth;
+
 			const rightBottomText = [
 				`${aperture.value}`,
 				`${shutterSpeed.value}`,
@@ -368,10 +372,10 @@
 			const svgImages = await Promise.all(Object.values(svgList));
 			const selectedSvgImage = svgImages[Object.keys(svgList).indexOf(brand.value)];
 
-			const svgX = canvas.width / 2 - svgRatio[brand.value][0] / 2 * ratio;
-			const svgY = canvas.height - 550 * ratio;
 			const svgWidth = svgRatio[brand.value][0] * ratio;
 			const svgHeight = svgRatio[brand.value][1] * ratio;
+			const svgX = rightX + 100 * ratio > canvas.width / 2 - svgRatio[brand.value][0] / 2 * ratio ? rightX + 100 * ratio : canvas.width / 2 - svgRatio[brand.value][0] / 2 * ratio;
+			const svgY = canvas.height - 550 * ratio;
 			ctx.drawImage(selectedSvgImage, svgX, svgY, svgWidth, svgHeight);
 		}
 
