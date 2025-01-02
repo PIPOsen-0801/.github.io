@@ -163,7 +163,7 @@
 					<option value="Olympus">Olympus</option>
 					<option value="Pentax">Pentax</option>
 					<option value="Ricoh">Ricoh</option>
-					<option value="Panasonic">Panasonic[Black]</option>
+					<option value="Panasonic">Panasonic</option>
 					<option value="Lumix">Lumix[Black]</option>
 					<option value="Apple">Apple[White]</option>
 					<option value="Apple[Black]">Apple[Black]</option>
@@ -184,6 +184,8 @@
 				<input type="number" id="expandUp" value="200">
 				<label for="expandDown">Expand down:</label>
 				<input type="number" id="expandDown" value="750">
+				<label for="textPosition">Text Position:</label>
+				<input type="number" id="textPosition" value="-750">
 			</div>
 		</div>
 	</div>
@@ -191,7 +193,7 @@
 		<button id="updateTextButton">Update Text</button>
 		<button id="downloadButton">Download</button>
 	</div>
-
+	<div id="svg-container"></div>
 	<script>
 		const imageInput = document.getElementById('imageInput');
 		const canvas = document.getElementById('canvas');
@@ -218,25 +220,38 @@
 		const expandAllInput = document.getElementById('expandAll');
 		const expandUpInput = document.getElementById('expandUp');
 		const expandDownInput = document.getElementById('expandDown');
+		const textPositionInput = document.getElementById('textPosition');
 		const resize = document.getElementById('resize');
 
 		let currentImage = null;
 		let fileName = "frame";
 		let ratio = 1;
+		let lastResize = 6000;
 
 		imageInput.addEventListener('change', async (event) => {
 			const file = event.target.files[0];
 			fileName = file.name;
 			if (file) {
 				const img = new Image();
+				img.crossOrigin = "anonymous";
 				img.onload = async () => {
 					let maxWidth;
 					if (img.height > img.width) {
-						maxWidth = resize.value / 3 * 2; 
+						maxWidth = resize.value / 3 * 2;
 					} else {
 						maxWidth = resize.value;
 					}
 					ratio = maxWidth / 6000;
+
+					if (lastResize != maxWidth) {
+						console.log(lastResize)
+						console.log(maxWidth)
+						expandAllInput.value = expandAllInput.value * maxWidth / lastResize;
+						expandUpInput.value = expandUpInput.value * maxWidth / lastResize;
+						expandDownInput.value = expandDownInput.value * maxWidth / lastResize;
+						textPositionInput.value = textPositionInput.value * maxWidth / lastResize;
+						lastResize = maxWidth;
+					}
 
 					const scale = maxWidth / img.width;
 					const newWidth = maxWidth;
@@ -247,6 +262,7 @@
 					ctx.drawImage(img, 0, 0, newWidth, newHeight);
 
 					const resizedImg = new Image();
+					resizedImg.crossOrigin = "anonymous";
 					resizedImg.src = canvas.toDataURL();
 					currentImage = resizedImg;
 
@@ -280,9 +296,10 @@
 			const color1Input = document.getElementById('color1');
 			const color2Input = document.getElementById('color2');
 
-			const expandAll = parseInt(expandAllInput.value * ratio, 10);
-			const expandUp = parseInt(expandUpInput.value * ratio, 10);
-			const expandDown = parseInt(expandDownInput.value * ratio, 10);
+			const expandAll = parseInt(expandAllInput.value * 1, 10);
+			const expandUp = parseInt(expandUpInput.value * 1, 10);
+			const expandDown = parseInt(expandDownInput.value * 1, 10);
+			const textPosition = parseInt(textPositionInput.value * 1, 10);
 
 			const expandColor1 = color0Input.value || "#000000";
 			canvas.width = currentImage.width + 2 * expandAll;
@@ -306,12 +323,12 @@
 			ctx.fillStyle = color1;
 			ctx.strokeStyle = color1;
 			ctx.lineWidth = 3 * ratio;
-			ctx.strokeText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
-			ctx.fillText(leftBottomText, expandAll + 50 * ratio, canvas.height + 300 * ratio - expandDown);
+			ctx.strokeText(leftBottomText, expandAll + 50 * ratio, canvas.height - 450 * ratio - textPosition - expandDown);
+			ctx.fillText(leftBottomText, expandAll + 50 * ratio, canvas.height - 450 * ratio - textPosition - expandDown);
 
 			ctx.font = 100 * ratio + "px Inter";
 			ctx.fillStyle = color2;
-			ctx.fillText(leftBottomText2, expandAll + 50 * ratio, canvas.height + 450 * ratio - expandDown);
+			ctx.fillText(leftBottomText2, expandAll + 50 * ratio, canvas.height - 300 * ratio - textPosition - expandDown);
 
 			const textWidth = ctx.measureText(leftBottomText2).width;
 			const leftX = expandAll + 50 * ratio;
@@ -328,33 +345,34 @@
 			const rightTextX = canvas.width - ctx.measureText(rightBottomText).width - expandAll;
 
 			ctx.fillStyle = color1;
-			ctx.strokeText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
-			ctx.fillText(rightBottomText, rightTextX - 50 * ratio, canvas.height + 300 * ratio - expandDown);
+			ctx.strokeText(rightBottomText, rightTextX - 50 * ratio, canvas.height - 450 * ratio - textPosition - expandDown);
+			ctx.fillText(rightBottomText, rightTextX - 50 * ratio, canvas.height - 450 * ratio - textPosition - expandDown);
 
 			ctx.fillStyle = color2;
 			ctx.font = 100 * ratio + "px Inter";
-			ctx.fillText(rightBottomText2, rightTextX - 50 * ratio, canvas.height + 450 * ratio - expandDown);
+			ctx.fillText(rightBottomText2, rightTextX - 50 * ratio, canvas.height - 300 * ratio - textPosition - expandDown);
 
 			if (brand.value == "null") return;
 
 			const svgList = {
-				"Canon": loadLocalSVG("canon-logo.svg"),
-				"Nikon": loadLocalSVG("nikon-logo.svg"),
-				"SONY": loadLocalSVG("sony-white.svg"),
-				"SONY[Black]": loadLocalSVG("sony-black.svg"),
-				"Leica": loadLocalSVG("leica-logo.svg"),
-				"Olympus": loadLocalSVG("olympus-logo.svg"),
-				"Pentax": loadLocalSVG("pentax-logo.svg"),
-				"Ricoh": loadLocalSVG("ricoh-logo.svg"),
-				"Panasonic": loadLocalSVG("panasonic-black.svg"),
-				"Lumix": loadLocalSVG("lumix-black.svg"),
-				"Apple": loadLocalSVG("apple-white.svg"),
-				"Apple[Black]": loadLocalSVG("apple-black.svg")
+				"Canon": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Canon_wordmark.svg",
+				"Nikon": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Nikon_Logo.svg",
+				"SONY": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Sony_logo_%28white%29.svg",
+				"SONY[Black]": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Sony_logo.svg",
+				"Leica": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Leica_Camera_logo.svg",
+				"Olympus": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Olympus_Corporation_logo.svg",
+				"OM System": "https://upload.wikimedia.org/wikipedia/commons/b/bd/OMDS_OM-System-Logo.svg",
+				"Pentax": "https://upload.wikimedia.org/wikipedia/commons/8/81/Pentax_Logo.svg",
+				"Ricoh": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Ricoh_logo_2012.svg",
+				"Panasonic": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Panasonic_logo_%28Blue%29.svg",
+				"Lumix": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Lumix_logo.svg",
+				"Apple": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Apple_logo_grey.svg",
+				"Apple[Black]": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
 			};
 
 			const svgRatio = {
 				"Canon": [1000, 200],
-				"Nikon": [1250, 1250],
+				"Nikon": [400, 400],
 				"SONY": [1000, 200],
 				"SONY[Black]": [1000, 200],
 				"Leica": [400, 400],
@@ -362,21 +380,31 @@
 				"Pentax": [1000, 200],
 				"Ricoh": [1000, 300],
 				"Panasonic": [1000, 200],
-				"Panasonic[Black]": [1000, 200],
 				"Lumix": [1000, 200],
 				"Lumix[Black]": [1000, 200],
-				"Apple": [275, 300],
-				"Apple[Black]": [500, 500]
+				"Apple": [300, 320],
+				"Apple[Black]": [300, 320]
 			};
 
-			const svgImages = await Promise.all(Object.values(svgList));
-			const selectedSvgImage = svgImages[Object.keys(svgList).indexOf(brand.value)];
+			const svgImages = {};
+
+			Object.keys(svgList).forEach(brandName => {
+				const img = new Image();
+				img.crossOrigin = "anonymous";
+				img.src = svgList[brandName];
+				svgImages[brandName] = img;
+			});
+
+			const selectedSvgImage = svgImages[brand.value];
 
 			const svgWidth = svgRatio[brand.value][0] * ratio;
 			const svgHeight = svgRatio[brand.value][1] * ratio;
 			const svgX = rightX + 100 * ratio > canvas.width / 2 - svgRatio[brand.value][0] / 2 * ratio ? rightX + 100 * ratio : canvas.width / 2 - svgRatio[brand.value][0] / 2 * ratio;
-			const svgY = canvas.height - 550 * ratio;
-			ctx.drawImage(selectedSvgImage, svgX, svgY, svgWidth, svgHeight);
+			const svgY = canvas.height - 500 * ratio - textPosition - expandDown;
+
+			selectedSvgImage.onload = function () {
+				ctx.drawImage(selectedSvgImage, svgX, svgY, svgWidth, svgHeight);
+			};
 		}
 
 		updateTextButton.addEventListener('click', drawTextOverlay);
@@ -387,26 +415,6 @@
 			link.href = canvas.toDataURL();
 			link.click();
 		});
-
-		async function loadLocalSVG(filePath) {
-			const response = await fetch(filePath);
-			const svgText = await response.text();
-			return loadSVGToImage(svgText);
-		}
-
-		function loadSVGToImage(svgString) {
-			return new Promise((resolve) => {
-				const img = new Image();
-				const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-				const url = URL.createObjectURL(svgBlob);
-				img.onload = () => {
-					URL.revokeObjectURL(url);
-					resolve(img);
-				};
-				img.src = url;
-			});
-		}
-
 
 		async function readExifData(file) {
 			return new Promise((resolve, reject) => {
