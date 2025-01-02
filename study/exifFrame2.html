@@ -152,7 +152,7 @@
 				<input type="text" id="aperture" value="N/A">
 				<label><input type="checkbox" id="focalLengthCheck" checked>Focal Length:</label>
 				<input type="text" id="focalLength" value="N/A">
-				<label><input type="checkbox" id="brandCheck" checked>Brand:</label>
+				<label><input type="checkbox" id="brandCheck" checked>Free Text:</label>
 				<input type="text" id="camera-brand" value="">
 				</select>
 			</div>
@@ -376,7 +376,7 @@
 								shutterSpeed: ss,
 								aperture: allMetaData.FNumber ? `f/${allMetaData.FNumber}` : null,
 								focalLength: allMetaData.FocalLength ? `${allMetaData.FocalLength}mm` : null,
-								brand: allMetaData.Make ? allMetaData.Make : null,
+								brand: allMetaData.Make ? "Shot on " + allMetaData.Make + " Camera" : null,
 								time: allMetaData.DateTimeOriginal ? allMetaData.DateTimeOriginal : null
 							});
 						});
