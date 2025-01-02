@@ -307,7 +307,7 @@
 			const color1 = color1Input.value || "#FFFFFF";
 			const color2 = color2Input.value || "#FFFFFF";
 			const leftBottomText = `${cameraName.value}` + `${lens.value}`;
-			const leftBottomText2 = `${focalLength.value}` + ", " + [
+			const leftBottomText2 = `${focalLength.value}` + [
 				`${aperture.value}`,
 				`${shutterSpeed.value}`,
 				`${iso.value}`
@@ -375,7 +375,7 @@
 								iso: "ISO-" + allMetaData.ISOSpeedRatings || null,
 								shutterSpeed: ss,
 								aperture: allMetaData.FNumber ? `f/${allMetaData.FNumber}` : null,
-								focalLength: allMetaData.FocalLength ? `${allMetaData.FocalLength}mm` : null,
+								focalLength: allMetaData.FocalLength ? allMetaData.FocalLength + "mm, " : null,
 								brand: allMetaData.Make ? "Shot on " + allMetaData.Make + " Camera" : null,
 								time: allMetaData.DateTimeOriginal ? allMetaData.DateTimeOriginal : null
 							});
