@@ -306,7 +306,7 @@
 
 			const color1 = color1Input.value || "#FFFFFF";
 			const color2 = color2Input.value || "#FFFFFF";
-			const leftBottomText = `${cameraName.value}` + " + " + `${lens.value}`;
+			const leftBottomText = `${cameraName.value}` + `${lens.value}`;
 			const leftBottomText2 = `${focalLength.value}` + ", " + [
 				`${aperture.value}`,
 				`${shutterSpeed.value}`,
@@ -370,7 +370,7 @@
 								var ss = null;
 							}
 							resolve({
-								camera: allMetaData.Model ? `${allMetaData.Model}` : null,
+								camera: allMetaData.Model ? allMetaData.Model + " + " : null,
 								lens: EXIF.getTag(this, "LensModel") || null,
 								iso: "ISO-" + allMetaData.ISOSpeedRatings || null,
 								shutterSpeed: ss,
