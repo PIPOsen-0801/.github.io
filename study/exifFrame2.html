@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>EXIF Frame 2</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			box-sizing: border-box;
+		}
+
+		.file-input-container {
+			margin-bottom: 20px;
+		}
+
+		.container {
+			display: flex;
+			justify-content: center;
+			gap: 20px;
+			width: 100%;
+			max-width: 1200px;
+		}
+
+		canvas {
+			border: 1px solid #ccc;
+			max-width: 600px;
+			max-height: 400px;
+			height: auto;
+		}
+
+		.controls {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+
+		.exif-controls label {
+			display: flex;
+			align-items: center;
+			font-size: 16px;
+		}
+
+		.exif-controls2 label {
+			display: flex;
+			align-items: center;
+			font-size: 16px;
+		}
+
+		.expand-controls label {
+			margin-left: -1px;
+		}
+
+		.exif-controls input[type="text"] {
+			margin-left: 10px;
+			width: 200px;
+			font-size: 14px;
+			padding: 5px;
+		}
+
+		#camera-brand {
+			margin-left: 10px;
+			width: 200px;
+			font-size: 14px;
+			padding: 5px;
+		}
+
+		.exif-controls input[type="checkbox"] {
+			margin-right: 10px;
+		}
+
+		.buttons {
+			display: flex;
+			gap: 10px;
+		}
+
+		.buttons button {
+			padding: 5px 10px;
+			font-size: 14px;
+			cursor: pointer;
+		}
+
+		.expand-controls input[type="number"] {
+			margin-left: 1px;
+			width: 60px;
+			font-size: 14px;
+			padding: 5px;
+		}
+
+		@media (max-width: 768px) {
+			.container {
+				flex-direction: column;
+				align-items: center;
+				width: 100%;
+			}
+
+			.canvas-wrapper {
+				width: 100%;
+				max-width: 100%;
+				overflow: auto;
+				display: flex;
+				justify-content: center;
+			}
+
+			canvas {
+				max-width: 100%;
+				max-height: none;
+				width: auto;
+				height: auto;
+			}
+
+			.controls {
+				width: 100%;
+				margin-top: 20px;
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+			}
+
+		}
+	</style>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+	<h1>EXIF Frame 2</h1>
+	<div class="file-input-container">
+		<input type="file" id="imageInput" accept="image/*">
+
+		<label for="resize">resize (px):</label>
+		<input type="number" id="resize" value="3840">
+	</div>
+	<div class="container">
+		<canvas id="canvas"></canvas>
+		<div class="controls">
+			<div class="exif-controls">
+				<label><input type="checkbox" id="cameraNameCheck" checked>Camera Name:</label>
+				<input type="text" id="cameraName" value="N/A">
+				<label><input type="checkbox" id="lensCheck" checked>Lens:</label>
+				<input type="text" id="lens" value="N/A">
+				<label><input type="checkbox" id="isoCheck" checked>ISO:</label>
+				<input type="text" id="iso" value="N/A">
+				<label><input type="checkbox" id="shutterSpeedCheck" checked>Shutter Speed:</label>
+				<input type="text" id="shutterSpeed" value="N/A">
+				<label><input type="checkbox" id="apertureCheck" checked>Aperture:</label>
+				<input type="text" id="aperture" value="N/A">
+				<label><input type="checkbox" id="focalLengthCheck" checked>Focal Length:</label>
+				<input type="text" id="focalLength" value="N/A">
+				<label><input type="checkbox" id="brandCheck" checked>Brand:</label>
+				<input type="text" id="camera-brand" value="">
+				</select>
+			</div>
+			<div class="exif-controls2">
+				<label for="color0">Color 0:</label>
+				<input type="text" id="color0" value="#000000">
+				<label for="color1">Color 1:</label>
+				<input type="text" id="color1" value="#FFFFFF">
+				<label for="color2">Color 2:</label>
+				<input type="text" id="color2" value="#FFFFFF">
+			</div>
+			<div class="expand-controls">
+				<label for="expandAll">ExpandAllSides (px):</label>
+				<input type="number" id="expandAll" value="200">
+				<label for="expandUp">Expand up:</label>
+				<input type="number" id="expandUp" value="200">
+				<label for="expandDown">Expand down:</label>
+				<input type="number" id="expandDown" value="300">
+				<label for="textPosition">Text Position:</label>
+				<input type="number" id="textPosition" value="-575">
+			</div>
+		</div>
+	</div>
+	<div class="buttons">
+		<button id="updateTextButton">Update Text</button>
+		<button id="downloadButton">Download</button>
+	</div>
+	<div id="svg-container"></div>
+	<script>
+		const imageInput = document.getElementById('imageInput');
+		const canvas = document.getElementById('canvas');
+		const ctx = canvas.getContext('2d');
+		const downloadButton = document.getElementById('downloadButton');
+		const updateTextButton = document.getElementById('updateTextButton');
+
+		const cameraName = document.getElementById('cameraName');
+		const iso = document.getElementById('iso');
+		const shutterSpeed = document.getElementById('shutterSpeed');
+		const aperture = document.getElementById('aperture');
+		const focalLength = document.getElementById('focalLength');
+		const lens = document.getElementById('lens');
+		const brand = document.getElementById('camera-brand');
+
+		const cameraNameCheck = document.getElementById('cameraNameCheck');
+		const lensCheck = document.getElementById('lensCheck');
+		const isoCheck = document.getElementById('isoCheck');
+		const shutterSpeedCheck = document.getElementById('shutterSpeedCheck');
+		const apertureCheck = document.getElementById('apertureCheck');
+		const focalLengthCheck = document.getElementById('focalLengthCheck');
+		const brandCheck = document.getElementById('brandCheck');
+
+		const expandAllInput = document.getElementById('expandAll');
+		const expandUpInput = document.getElementById('expandUp');
+		const expandDownInput = document.getElementById('expandDown');
+		const textPositionInput = document.getElementById('textPosition');
+		const resize = document.getElementById('resize');
+
+		let lastResize = 6000;
+
+		let currentImage = null;
+		let fileName = "frame";
+		let ratio = 1;
+
+		imageInput.addEventListener('change', async (event) => {
+			const file = event.target.files[0];
+			fileName = file.name;
+			if (file) {
+				const img = new Image();
+				img.crossOrigin = "anonymous";
+				img.onload = async () => {
+					let maxWidth;
+					if (img.height > img.width) {
+						maxWidth = resize.value / 3 * 2;
+					} else {
+						maxWidth = resize.value;
+					}
+					ratio = maxWidth / 6000;
+
+					if (lastResize != maxWidth) {
+						console.log(lastResize)
+						console.log(maxWidth)
+						expandAllInput.value = expandAllInput.value * maxWidth / lastResize;
+						expandUpInput.value = expandUpInput.value * maxWidth / lastResize;
+						expandDownInput.value = expandDownInput.value * maxWidth / lastResize;
+						textPositionInput.value = textPositionInput.value * maxWidth / lastResize;
+						lastResize = maxWidth;
+					}
+
+					const scale = maxWidth / img.width;
+					const newWidth = maxWidth;
+					const newHeight = img.height * scale;
+
+					canvas.width = newWidth;
+					canvas.height = newHeight;
+					ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+					const resizedImg = new Image();
+					resizedImg.crossOrigin = "anonymous";
+					resizedImg.src = canvas.toDataURL();
+					currentImage = resizedImg;
+
+					await extractExifData(file);
+					drawTextOverlay();
+				};
+				img.src = URL.createObjectURL(file);
+
+				event.target.value = '';
+			}
+		});
+
+
+		async function extractExifData(file) {
+			const exifData = await readExifData(file);
+			if (exifData) {
+				if (cameraNameCheck.checked) cameraName.value = exifData.camera || 'N/A';
+				if (lensCheck.checked) lens.value = exifData.lens || 'N/A';
+				if (isoCheck.checked) iso.value = exifData.iso || 'N/A';
+				if (shutterSpeedCheck.checked) shutterSpeed.value = exifData.shutterSpeed || 'N/A';
+				if (apertureCheck.checked) aperture.value = exifData.aperture || 'N/A';
+				if (focalLengthCheck.checked) focalLength.value = exifData.focalLength || 'N/A';
+				if (brandCheck.checked) brand.value = exifData.brand || 'null';
+				dateTimeField = exifData.time || 'N/A';
+			}
+		}
+
+		async function drawTextOverlay() {
+			if (!canvas.width || !canvas.height || !currentImage) return;
+
+			const color0Input = document.getElementById('color0');
+			const color1Input = document.getElementById('color1');
+			const color2Input = document.getElementById('color2');
+
+			const expandAll = parseInt(expandAllInput.value * 1, 10);
+			const expandUp = parseInt(expandUpInput.value * 1, 10);
+			const expandDown = parseInt(expandDownInput.value * 1, 10);
+			const textPosition = parseInt(textPositionInput.value * 1, 10);
+
+			const expandColor1 = color0Input.value || "#000000";
+			canvas.width = currentImage.width + 2 * expandAll;
+			canvas.height = currentImage.height + expandUp + expandDown;
+
+			ctx.fillStyle = expandColor1;
+			ctx.fillRect(0, 0, expandAll, canvas.height);
+			ctx.fillRect(canvas.width - expandAll, 0, expandAll, canvas.height);
+			ctx.fillRect(0, 0, canvas.width, expandUp);
+			ctx.fillRect(0, canvas.height - expandDown, canvas.width, expandDown);
+
+			const offsetX = expandAll;
+			const offsetY = expandUp;
+			ctx.drawImage(currentImage, offsetX, offsetY);
+
+			const color1 = color1Input.value || "#FFFFFF";
+			const color2 = color2Input.value || "#FFFFFF";
+			const leftBottomText = `${cameraName.value}` + " + " + `${lens.value}`;
+			const leftBottomText2 = `${focalLength.value}` + ", " + [
+				`${aperture.value}`,
+				`${shutterSpeed.value}`,
+				`${iso.value}`
+			].join(' ');
+			ctx.font = 100 * ratio + "px Inter";
+			ctx.fillStyle = color1;
+			ctx.lineWidth = 3 * ratio;
+			ctx.fillText(leftBottomText, expandAll + 50 * ratio, canvas.height - 450 * ratio - textPosition - expandDown);
+
+			ctx.font = 100 * ratio + "px Inter";
+			ctx.fillStyle = color2;
+			ctx.fillText(leftBottomText2, expandAll + 50 * ratio, canvas.height - 325 * ratio - textPosition - expandDown);
+
+			const textWidth = ctx.measureText(leftBottomText2).width;
+			const leftX = expandAll + 50 * ratio;
+			const rightX = leftX + textWidth;
+
+			const dataTime = dateTimeField.split(" ");
+			const rightBottomText2 = `${dataTime[0].replace(/:/g, '/') + " " + dataTime[1]}`;
+
+			const rightBottomText = `${brand.value}`;
+			ctx.font = 100 * ratio + "px Inter";
+			var rightTextX = canvas.width - ctx.measureText(rightBottomText).width - expandAll;
+			var rightTextX2 = canvas.width - ctx.measureText(rightBottomText2).width - expandAll;
+
+			ctx.fillStyle = color1;
+			ctx.fillText(rightBottomText, rightTextX - 50 * ratio, canvas.height - 450 * ratio - textPosition - expandDown);
+
+			ctx.fillStyle = color2;
+			ctx.font = 100 * ratio + "px Inter";
+			ctx.fillText(rightBottomText2, rightTextX2 - 50 * ratio, canvas.height - 325 * ratio - textPosition - expandDown);
+		}
+
+		updateTextButton.addEventListener('click', drawTextOverlay);
+
+		downloadButton.addEventListener('click', () => {
+			const link = document.createElement('a');
+			link.download = "f" + fileName;
+			link.href = canvas.toDataURL();
+			link.click();
+		});
+
+		async function readExifData(file) {
+			return new Promise((resolve, reject) => {
+				if (!window.EXIF) {
+					console.error('EXIF library is not loaded.');
+					resolve(null);
+				} else {
+					try {
+						EXIF.Tags[0xA434] = "LensModel";
+						EXIF.getData(file, function () {
+							const allMetaData = EXIF.getAllTags(this);
+							if (allMetaData.ExposureTime) {
+								if (allMetaData.ExposureTime > 0.3) {
+									var ss = `${allMetaData.ExposureTime}s`;
+								} else {
+									var ss = `1/${1 / allMetaData.ExposureTime}s`;
+								}
+							} else {
+								var ss = null;
+							}
+							resolve({
+								camera: allMetaData.Model ? `${allMetaData.Model}` : null,
+								lens: EXIF.getTag(this, "LensModel") || null,
+								iso: "ISO-" + allMetaData.ISOSpeedRatings || null,
+								shutterSpeed: ss,
+								aperture: allMetaData.FNumber ? `f/${allMetaData.FNumber}` : null,
+								focalLength: allMetaData.FocalLength ? `${allMetaData.FocalLength}mm` : null,
+								brand: allMetaData.Make ? allMetaData.Make : null,
+								time: allMetaData.DateTimeOriginal ? allMetaData.DateTimeOriginal : null
+							});
+						});
+					} catch (error) {
+						console.error('Error reading EXIF data:', error);
+						resolve(null);
+					}
+				}
+			});
+		}
+
+		if (!document.getElementById('exifLibraryInfo')) {
+			const exifLibraryInfo = document.createElement('p');
+			exifLibraryInfo.id = 'exifLibraryInfo';
+			exifLibraryInfo.style.fontSize = '12px';
+			exifLibraryInfo.style.color = '#555';
+			exifLibraryInfo.textContent = '';
+			document.body.appendChild(exifLibraryInfo);
+		}
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
+</body>
+
+</html>
