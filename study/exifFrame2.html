@@ -179,6 +179,7 @@
 	<div class="buttons">
 		<button id="updateTextButton">Update Text</button>
 		<button id="downloadButton">Download</button>
+		<span id="shortSide"></span>
 	</div>
 	<div id="svg-container"></div>
 	<script>
@@ -220,12 +221,13 @@
 			const file = event.target.files[0];
 			fileName = file.name;
 			if (file) {
+				fileName = file.name.replace(/\.[^/.]+$/, ".png");
 				const img = new Image();
 				img.crossOrigin = "anonymous";
 				img.onload = async () => {
 					let maxWidth;
 					if (img.height > img.width) {
-						maxWidth = resize.value / 3 * 2;
+						maxWidth = resize.value / img.height * img.width;
 					} else {
 						maxWidth = resize.value;
 					}
@@ -303,6 +305,8 @@
 			const offsetX = expandAll;
 			const offsetY = expandUp;
 			ctx.drawImage(currentImage, offsetX, offsetY);
+
+			document.getElementById("shortSide").innerHTML = (canvas.width-expandAll*2)+" x "+(canvas.height-expandUp-expandDown)+"("+canvas.width+" x "+canvas.height+")";
 
 			const color1 = color1Input.value || "#FFFFFF";
 			const color2 = color2Input.value || "#FFFFFF";
