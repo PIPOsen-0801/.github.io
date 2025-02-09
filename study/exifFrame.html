@@ -156,10 +156,12 @@
 					<option value="null">(None)</option>
 					<option value="Canon">Canon</option>
 					<option value="Nikon">Nikon</option>
-					<option value="SONY">Sony[White]</option>
-					<option value="SONY[Black]">Sony[Black]</option>
+					<option value="SONY[White]">Sony[White]</option>
+					<option value="SONY">Sony[Black]</option>
 					<option value="Leica">Leica</option>
 					<option value="Olympus">Olympus</option>
+					<option value="OM System">OM System</option>
+					<option value="FUJIFILM">Fujifilm</option>
 					<option value="Pentax">Pentax</option>
 					<option value="Ricoh">Ricoh</option>
 					<option value="Panasonic">Panasonic</option>
@@ -170,11 +172,11 @@
 			</div>
 			<div class="exif-controls2">
 				<label for="color0">Color 0:</label>
-				<input type="text" id="color0" value="#000000">
+				<input type="text" id="color0" value="#FFFFFF">
 				<label for="color1">Color 1:</label>
-				<input type="text" id="color1" value="#FFFFFF">
+				<input type="text" id="color1" value="#000000">
 				<label for="color2">Color 2:</label>
-				<input type="text" id="color2" value="#444444">
+				<input type="text" id="color2" value="#AAAAAA">
 			</div>
 			<div class="expand-controls">
 				<label for="expandAll">ExpandAllSides (px):</label>
@@ -185,6 +187,8 @@
 				<input type="number" id="expandDown" value="750">
 				<label for="textPosition">Text Position:</label>
 				<input type="number" id="textPosition" value="-750">
+				<label for="logoPosition">Logo Position:</label>
+				<input type="number" id="logoPosition" value="0">
 			</div>
 		</div>
 	</div>
@@ -222,6 +226,7 @@
 		const expandDownInput = document.getElementById('expandDown');
 		const textPositionInput = document.getElementById('textPosition');
 		const resize = document.getElementById('resize');
+		const logoPositionInput = document.getElementById('logoPosition');
 
 		let currentImage = null;
 		let fileName = "frame";
@@ -303,8 +308,9 @@
 			const expandUp = parseInt(expandUpInput.value * 1, 10);
 			const expandDown = parseInt(expandDownInput.value * 1, 10);
 			const textPosition = parseInt(textPositionInput.value * 1, 10);
+			const logoPosition = parseInt(logoPositionInput.value * 1, 10);
 
-			const expandColor1 = color0Input.value || "#000000";
+			const expandColor1 = color0Input.value || "#FFFFFF";
 			canvas.width = currentImage.width + 2 * expandAll;
 			canvas.height = currentImage.height + expandUp + expandDown;
 
@@ -320,8 +326,8 @@
 
 			document.getElementById("shortSide").innerHTML = (canvas.width-expandAll*2)+" x "+(canvas.height-expandUp-expandDown)+"("+canvas.width+" x "+canvas.height+")";
 
-			const color1 = color1Input.value || "#FFFFFF";
-			const color2 = color2Input.value || "#444444";
+			const color1 = color1Input.value || "#000000";
+			const color2 = color2Input.value || "#aaaaaa";
 			const leftBottomText = `${cameraName.value}`;
 			const leftBottomText2 = `${lens.value}`;
 			ctx.font = 500 * ratio + " " + 150 * ratio + "px Inter";
@@ -362,11 +368,12 @@
 			const svgList = {
 				"Canon": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Canon_wordmark.svg",
 				"Nikon": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Nikon_Logo.svg",
-				"SONY": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Sony_logo_%28white%29.svg",
-				"SONY[Black]": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Sony_logo.svg",
+				"SONY[White]": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Sony_logo_%28white%29.svg",
+				"SONY": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Sony_logo.svg",
 				"Leica": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Leica_Camera_logo.svg",
 				"Olympus": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Olympus_Corporation_logo.svg",
 				"OM System": "https://upload.wikimedia.org/wikipedia/commons/b/bd/OMDS_OM-System-Logo.svg",
+				"FUJIFILM": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Fujifilm_logo.svg",
 				"Pentax": "https://upload.wikimedia.org/wikipedia/commons/8/81/Pentax_Logo.svg",
 				"Ricoh": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Ricoh_logo_2012.svg",
 				"Panasonic": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Panasonic_logo_%28Blue%29.svg",
@@ -376,19 +383,21 @@
 			};
 
 			const svgRatio = {
-				"Canon": [1000, 200],
-				"Nikon": [400, 400],
-				"SONY": [1000, 200],
-				"SONY[Black]": [1000, 200],
-				"Leica": [400, 400],
-				"Olympus": [1000, 200],
-				"Pentax": [1000, 200],
-				"Ricoh": [1000, 300],
-				"Panasonic": [1000, 200],
-				"Lumix": [1000, 200],
-				"Lumix[Black]": [1000, 200],
-				"Apple": [300, 320],
-				"Apple[Black]": [300, 320]
+				"Canon": [1000, 200, 0],
+				"Nikon": [400, 400, 60],
+				"SONY[White]": [1000, 200, 0],
+				"SONY": [1000, 200, 0],
+				"Leica": [400, 400, 50],
+				"Olympus": [1000, 200, 0],
+				"OM System": [500, 500, 75],
+				"FUJIFILM": [1000, 200, 0],
+				"Pentax": [1000, 200, 0],
+				"Ricoh": [1000, 300, 0],
+				"Panasonic": [1000, 200, 0],
+				"Lumix": [1000, 200, 0],
+				"Lumix[Black]": [1000, 200, 0],
+				"Apple": [300, 350, 50],
+				"Apple[Black]": [300, 350, 50]
 			};
 
 			const svgImages = {};
@@ -405,7 +414,7 @@
 			const svgWidth = svgRatio[brand.value][0] * ratio;
 			const svgHeight = svgRatio[brand.value][1] * ratio;
 			const svgX = rightX + 100 * ratio > canvas.width / 2 - svgRatio[brand.value][0] / 2 * ratio ? rightX + 100 * ratio : canvas.width / 2 - svgRatio[brand.value][0] / 2 * ratio;
-			const svgY = canvas.height - 500 * ratio - textPosition - expandDown;
+			const svgY = canvas.height - 500 * ratio - textPosition - expandDown - logoPosition - svgRatio[brand.value][2];
 
 			selectedSvgImage.onload = function () {
 				ctx.drawImage(selectedSvgImage, svgX, svgY, svgWidth, svgHeight);
